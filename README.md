@@ -1,0 +1,90 @@
+# Fetia
+
+Des cartes d'invitation et de fete trop belles — anniversaire, invitation, mariage, naissance — creees en ligne, personnalisees en direct, et partagees en un lien.
+
+## Stack
+
+- **Frontend** : Nuxt 3, Vue 3, Tailwind CSS, Pinia
+- **Backend** : NestJS, TypeORM, PostgreSQL, Passport/JWT
+- **Paiement** : Stripe Checkout (modeles premium)
+- **Infra** : Docker / docker-compose
+
+## Fonctionnalites (MVP)
+
+- Galerie de modeles filtrable par categorie (anniversaire, fete, invitation, mariage, naissance)
+- Editeur avec apercu live de la carte (titre, sous-titre, message)
+- Comptes utilisateurs (inscription / connexion par JWT)
+- Cartes gratuites et cartes premium debloquees via Stripe Checkout
+- Page publique de carte avec animation d'ouverture + confettis, partageable par lien (`/c/:slug`)
+- Tableau de bord "Mes cartes"
+
+## Demarrer en local
+
+### Avec Docker (recommande)
+
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+docker compose up --build
+```
+
+- Frontend : http://localhost:3000
+- API : http://localhost:3001/api
+
+Au premier lancement, seed les modeles de cartes :
+
+```bash
+docker compose exec backend npm run seed
+```
+
+### Sans Docker
+
+**Backend**
+
+```bash
+cd backend
+cp .env.example .env   # renseigner DATABASE_URL vers un Postgres local
+npm install
+npm run start:dev
+npm run seed            # dans un autre terminal, une fois la DB prete
+```
+
+**Frontend**
+
+```bash
+cd frontend
+cp .env.example .env
+npm install
+npm run dev
+```
+
+## Paiement Stripe
+
+Les clefs sont a renseigner dans `backend/.env` :
+
+```
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+En local, pour recevoir les evenements webhook :
+
+```bash
+stripe listen --forward-to localhost:3001/api/payments/webhook
+```
+
+## Structure
+
+```
+fetia/
+  backend/    # API NestJS (auth, templates, cards, payments)
+  frontend/   # App Nuxt 3 (landing, editeur, dashboard)
+  docker-compose.yml
+```
+
+## Roadmap possible
+
+- Upload de photo dans les cartes (S3 / Cloudinary)
+- Export PDF / impression
+- Domaine personnalise par carte
+- Abonnement mensuel (au lieu du paiement a l'unite)
