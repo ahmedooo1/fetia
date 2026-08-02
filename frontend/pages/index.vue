@@ -83,6 +83,37 @@ const steps = [
       </div>
     </section>
 
+    <!-- INVITATION MAGIQUE -->
+    <section class="mx-auto max-w-6xl px-6 py-20">
+      <div class="grid items-center gap-14 md:grid-cols-2">
+        <div class="order-2 md:order-1">
+          <span class="mb-4 inline-block rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.16em] text-gold">
+            Invitations premium
+          </span>
+          <h2 class="font-display text-3xl font-bold text-cream text-balance md:text-4xl">
+            Une invitation qui se <span class="bg-gradient-to-r from-gold to-coral bg-clip-text text-transparent">merite d'etre ouverte</span>
+          </h2>
+          <p class="mt-4 font-body text-cream/70">
+            Sceau de cire, particules lumineuses, texte qui scintille: chaque invitation Fetia se vit comme un petit moment,
+            pas comme un simple message.
+          </p>
+          <NuxtLink
+            to="/templates?category=invitation"
+            class="mt-6 inline-block rounded-full bg-gradient-to-r from-gold to-coral px-7 py-3.5 font-display text-base font-bold text-ink shadow-xl shadow-gold/20 transition hover:scale-105"
+          >
+            Voir les invitations
+          </NuxtLink>
+        </div>
+        <div class="order-1 mx-auto w-full max-w-sm md:order-2">
+          <InvitationEnvelope
+            title="Vous etes invites"
+            subtitle="Soiree du Nouvel An"
+            message="Venez celebrer avec nous, robe de fete et bonne humeur exigees."
+          />
+        </div>
+      </div>
+    </section>
+
     <!-- COMMENT CA MARCHE -->
     <section class="mx-auto max-w-6xl px-6 py-20">
       <h2 class="mb-12 font-display text-3xl font-bold text-cream md:text-4xl">Trois etapes, une carte prete</h2>

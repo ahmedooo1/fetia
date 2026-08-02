@@ -47,6 +47,17 @@ function openCard() {
       <NuxtLink to="/templates" class="font-body text-sm text-gold underline">Creer ma propre carte</NuxtLink>
     </div>
 
+    <div v-else-if="card && card.template.designKey === 'golden-invite'" class="w-full max-w-sm">
+      <InvitationEnvelope
+        :title="card.data.title"
+        :subtitle="card.data.subtitle"
+        :message="card.data.message"
+      />
+      <NuxtLink to="/templates" class="mt-8 inline-block font-body text-sm text-cream/50 underline-offset-4 hover:text-cream hover:underline">
+        Creer ma propre carte sur Fetia
+      </NuxtLink>
+    </div>
+
     <div v-else-if="card" class="relative w-full max-w-sm" style="perspective: 1200px">
       <p v-if="!opened" class="mb-5 font-body text-sm text-cream/50">Touche la carte pour l'ouvrir</p>
       <button
