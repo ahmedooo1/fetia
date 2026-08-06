@@ -74,12 +74,13 @@ const showcase = [
   <main>
     <!-- HERO : la demo EST le hero -->
     <section class="relative mx-auto max-w-6xl px-6 pb-10 pt-14 text-center">
-      <span class="mb-5 inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.16em] text-cream/70">
-        Cartes et invitations en ligne
-      </span>
+
       <h1 class="mx-auto max-w-3xl font-display text-5xl font-extrabold leading-[1.02] text-cream text-balance md:text-6xl">
         Des invitations que vos proches vont <span class="bg-gradient-to-r from-coral via-gold to-violet bg-clip-text text-transparent">ouvrir deux fois</span>
       </h1>
+      <span class="mb-5 inline-block px-4 py-1.5 text-xs font-medium uppercase tracking-[0.16em] text-cream/70">
+        Cartes et invitations en ligne
+      </span>
       <p class="mx-auto mt-6 max-w-xl font-body text-lg leading-relaxed text-cream/70">
         Sceau de cire, ornements dessines a la main, programme qui se devoile en scrollant. Chaque carte est un mini-site que vous partagez en un lien.
       </p>

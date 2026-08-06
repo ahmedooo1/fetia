@@ -21,6 +21,12 @@ export class User {
   @Column({ nullable: true })
   name: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  resetPasswordTokenHash: string | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  resetPasswordExpires: Date | null;
+
   @OneToMany(() => Card, (card) => card.owner)
   cards: Card[];
 

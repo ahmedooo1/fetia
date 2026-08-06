@@ -9,6 +9,8 @@ interface Template {
   defaultData: any
 }
 
+useHead({ title: 'Les modeles - Fetia' })
+
 const route = useRoute()
 const { request } = useApi()
 
@@ -40,6 +42,12 @@ async function load() {
 }
 
 watch(active, load)
+watch(
+  () => route.query.category,
+  (val) => {
+    active.value = (val as string) || ''
+  },
+)
 onMounted(load)
 </script>
 

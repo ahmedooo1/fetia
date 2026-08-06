@@ -9,6 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
@@ -31,11 +32,15 @@ export class CardsController {
     return this.cardsService.findMine(req.user.id);
   }
 
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 60, ttl: 60 * 1000 } })
   @Get('public/:slug')
   findBySlug(@Param('slug') slug: string) {
     return this.cardsService.findBySlug(slug);
   }
 
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 5, ttl: 10 * 60 * 1000 } })
   @Post('public/:slug/rsvp')
   createRsvp(@Param('slug') slug: string, @Body() dto: CreateRsvpDto) {
     return this.cardsService.createRsvp(slug, dto);

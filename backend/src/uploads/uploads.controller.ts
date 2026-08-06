@@ -19,6 +19,24 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 
 const ALLOWED = ['.jpg', '.jpeg', '.png', '.webp'];
 
+function matchesRealImageContent(filePath: string): boolean {
+  const fd = fs.openSync(filePath, 'r');
+  const header = Buffer.alloc(12);
+  fs.readSync(fd, header, 0, 12, 0);
+  fs.closeSync(fd);
+
+  const isJpeg = header[0] === 0xff && header[1] === 0xd8 && header[2] === 0xff;
+  const isPng =
+    header[0] === 0x89 &&
+    header[1] === 0x50 &&
+    header[2] === 0x4e &&
+    header[3] === 0x47;
+  const isWebp =
+    header.toString('ascii', 0, 4) === 'RIFF' && header.toString('ascii', 8, 12) === 'WEBP';
+
+  return isJpeg || isPng || isWebp;
+}
+
 @Controller('uploads')
 export class UploadsController {
   @UseGuards(JwtAuthGuard)
@@ -45,6 +63,10 @@ export class UploadsController {
   )
   upload(@UploadedFile() file: any) {
     if (!file) throw new BadRequestException('Aucun fichier recu');
+    if (!matchesRealImageContent(file.path)) {
+      fs.unlink(file.path, () => undefined);
+      throw new BadRequestException('Le fichier ne correspond pas a une image valide (jpg, png, webp)');
+    }
     return { url: `/uploads/${file.filename}` };
   }
 }

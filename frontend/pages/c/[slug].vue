@@ -43,6 +43,10 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+const magicRef = ref()
+const { downloading, downloadError, downloadImage, downloadPdf } = useCardDownload(magicRef)
+const downloadName = computed(() => card.value?.data.title || 'ma-carte')
 </script>
 
 <template>
@@ -64,6 +68,7 @@ onMounted(async () => {
 
     <template v-else-if="card">
       <MagicExperience
+        ref="magicRef"
         :accent="(card.data.accent as any) || 'gold'"
         :title="card.data.title"
         :subtitle="card.data.subtitle"
@@ -77,13 +82,32 @@ onMounted(async () => {
         :music-url="card.data.musicUrl"
         :rsvp-slug="card.rsvpEnabled ? card.slug : ''"
       />
-      <div class="fixed bottom-5 left-1/2 z-40 -translate-x-1/2">
-        <NuxtLink
-          to="/templates"
-          class="rounded-full bg-night/85 px-5 py-2.5 font-body text-xs font-semibold text-cream/90 shadow-2xl backdrop-blur transition hover:scale-105"
-        >
-          Creee avec Fetia
-        </NuxtLink>
+      <div class="fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 flex-col items-center gap-2">
+        <p v-if="downloadError" class="rounded-full bg-coral/90 px-4 py-1.5 font-body text-xs font-semibold text-white shadow-lg">{{ downloadError }}</p>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            :disabled="!!downloading"
+            class="rounded-full bg-night/85 px-4 py-2.5 font-body text-xs font-semibold text-cream/90 shadow-2xl backdrop-blur transition hover:scale-105 disabled:opacity-60"
+            @click="downloadImage(downloadName)"
+          >
+            {{ downloading === 'image' ? 'Preparation...' : 'Telecharger l\'image' }}
+          </button>
+          <button
+            type="button"
+            :disabled="!!downloading"
+            class="rounded-full bg-night/85 px-4 py-2.5 font-body text-xs font-semibold text-cream/90 shadow-2xl backdrop-blur transition hover:scale-105 disabled:opacity-60"
+            @click="downloadPdf(downloadName)"
+          >
+            {{ downloading === 'pdf' ? 'Preparation...' : 'Telecharger en PDF' }}
+          </button>
+          <NuxtLink
+            to="/templates"
+            class="rounded-full bg-night/85 px-5 py-2.5 font-body text-xs font-semibold text-cream/90 shadow-2xl backdrop-blur transition hover:scale-105"
+          >
+            Creee avec Fetia
+          </NuxtLink>
+        </div>
       </div>
     </template>
   </div>

@@ -14,7 +14,16 @@ export default defineNuxtConfig({
           content:
             "Cree des cartes d'invitation et de fete magnifiques en 2 minutes, personnalise-les et partage-les avec un lien.",
         },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: 'Fetia - Des cartes trop belles pour vos moments' },
+        {
+          property: 'og:description',
+          content:
+            "Cree des cartes d'invitation et de fete magnifiques en 2 minutes, personnalise-les et partage-les avec un lien.",
+        },
+        { name: 'twitter:card', content: 'summary' },
       ],
+      link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     },
   },
   runtimeConfig: {

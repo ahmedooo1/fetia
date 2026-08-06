@@ -526,6 +526,8 @@ const { target: timelineTarget, visible: timelineVisible } = useScrollReveal()
 const { target: closingTarget, visible: closingVisible } = useScrollReveal()
 const { target: rsvpTarget, visible: rsvpVisible } = useScrollReveal()
 const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
+
+defineExpose({ open, opened })
 </script>
 
 <template>
@@ -598,7 +600,7 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
             :class="photoWrapClass"
             :style="{ borderColor: t.accentSoft, width: 'clamp(120px, 34cqw, 190px)', height: 'clamp(150px, 44cqw, 245px)' }"
           >
-            <img :src="resolvedPhoto" alt="" class="h-full w-full object-cover" />
+            <img :src="resolvedPhoto" alt="" crossorigin="anonymous" class="h-full w-full object-cover" />
           </div>
         </div>
 

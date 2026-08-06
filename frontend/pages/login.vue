@@ -38,7 +38,10 @@ async function submit() {
         <input v-model="email" type="email" required class="focus-ring w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-cream" />
       </div>
       <div>
-        <label class="mb-1.5 block font-body text-sm text-cream/80">Mot de passe</label>
+        <div class="mb-1.5 flex items-center justify-between">
+          <label class="block font-body text-sm text-cream/80">Mot de passe</label>
+          <NuxtLink to="/forgot-password" class="font-body text-xs text-gold underline">Oublie ?</NuxtLink>
+        </div>
         <input v-model="password" type="password" required class="focus-ring w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-cream" />
       </div>
       <p v-if="errorMsg" class="font-body text-sm text-coral">{{ errorMsg }}</p>

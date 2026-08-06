@@ -1,8 +1,8 @@
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
-export class RegisterDto {
-  @IsEmail()
-  email: string;
+export class ResetPasswordDto {
+  @IsString()
+  token: string;
 
   @IsString()
   @MinLength(8, { message: 'Le mot de passe doit contenir au moins 8 caracteres' })
@@ -11,9 +11,4 @@ export class RegisterDto {
     message: 'Le mot de passe doit contenir au moins une lettre et un chiffre',
   })
   password: string;
-
-  @IsString()
-  @MinLength(2)
-  @MaxLength(80)
-  name: string;
 }
