@@ -76,11 +76,11 @@ onMounted(load)
 
     <p v-if="error" class="font-body text-sm text-coral">{{ error }}</p>
 
-    <div v-if="loading" class="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
+    <div v-if="loading" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       <div v-for="i in 8" :key="i" class="aspect-[3/4] animate-pulse rounded-3xl bg-white/5" />
     </div>
 
-    <div v-else-if="templates.length" class="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
+    <div v-else-if="templates.length" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       <TemplateCard v-for="t in templates" :key="t.id" :template="t" />
     </div>
 
