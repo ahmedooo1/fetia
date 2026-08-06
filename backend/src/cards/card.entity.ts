@@ -3,10 +3,12 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  OneToMany,
   CreateDateColumn,
 } from 'typeorm';
 import { User } from '../users/user.entity';
 import { CardTemplate } from '../templates/template.entity';
+import { Rsvp } from './rsvp.entity';
 
 @Entity('cards')
 export class Card {
@@ -27,6 +29,15 @@ export class Card {
 
   @Column({ default: true })
   isUnlocked: boolean;
+
+  @Column({ default: 0 })
+  views: number;
+
+  @Column({ default: true })
+  rsvpEnabled: boolean;
+
+  @OneToMany(() => Rsvp, (rsvp) => rsvp.card)
+  rsvps: Rsvp[];
 
   @CreateDateColumn()
   createdAt: Date;

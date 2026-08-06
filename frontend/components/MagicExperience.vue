@@ -1,5 +1,9 @@
 <script setup lang="ts">
-type Accent = 'sunset' | 'candy' | 'gold' | 'sage' | 'sky' | 'neon'
+type Accent =
+  | 'sunset' | 'candy' | 'gold' | 'sage' | 'sky' | 'neon'
+  | 'blush' | 'terracotta' | 'champagne' | 'pearl' | 'navy' | 'burgundy'
+  | 'ruby' | 'lavender' | 'noir' | 'emerald' | 'ocean' | 'mint' | 'rose'
+  | 'forest' | 'midnight'
 
 interface TimelineItem {
   time?: string
@@ -18,6 +22,7 @@ const props = withDefaults(
     timeline?: TimelineItem[]
     forceOpen?: boolean
     compact?: boolean
+    rsvpSlug?: string
   }>(),
   {
     accent: 'gold',
@@ -30,6 +35,7 @@ const props = withDefaults(
     timeline: () => [],
     forceOpen: false,
     compact: false,
+    rsvpSlug: '',
   },
 )
 
@@ -108,9 +114,165 @@ const themes: Record<Accent, Theme> = {
     particles: '#FF9DB3',
     dark: true,
   },
+  blush: {
+    bg: 'linear-gradient(175deg, #FDF6F7 0%, #FAEAEC 55%, #F5DDE1 100%)',
+    bgSoft: '#FAEAEC',
+    ink: '#6E4249',
+    accent: '#C4808C',
+    accentSoft: '#E3B7BF',
+    eyebrow: 'Mariage',
+    scriptTitle: true,
+    particles: '#D89AA6',
+  },
+  terracotta: {
+    bg: 'linear-gradient(175deg, #FBF4EE 0%, #F6E7DA 55%, #EFD8C4 100%)',
+    bgSoft: '#F6E7DA',
+    ink: '#7A4A31',
+    accent: '#BC6C46',
+    accentSoft: '#DDA382',
+    eyebrow: 'Mariage',
+    scriptTitle: true,
+    particles: '#CE8B64',
+  },
+  champagne: {
+    bg: 'linear-gradient(175deg, #FCFAF4 0%, #F7F1E2 55%, #F0E6CD 100%)',
+    bgSoft: '#F7F1E2',
+    ink: '#6E5F3B',
+    accent: '#B9A15C',
+    accentSoft: '#DBCB9C',
+    eyebrow: 'Fiancailles',
+    scriptTitle: true,
+    particles: '#CCB672',
+  },
+  pearl: {
+    bg: 'linear-gradient(175deg, #FDFDFC 0%, #F6F5F1 55%, #ECEAE3 100%)',
+    bgSoft: '#F6F5F1',
+    ink: '#5C5A50',
+    accent: '#A8A28D',
+    accentSoft: '#CFCBBB',
+    eyebrow: 'Bapteme',
+    scriptTitle: true,
+    particles: '#BBB6A2',
+  },
+  navy: {
+    bg: 'linear-gradient(175deg, #0F1B33 0%, #14233F 55%, #0C1628 100%)',
+    bgSoft: '#14233F',
+    ink: '#EFE7D2',
+    accent: '#C9A85C',
+    accentSoft: '#39527A',
+    eyebrow: 'Gala',
+    scriptTitle: true,
+    particles: '#D8BD7B',
+    dark: true,
+  },
+  burgundy: {
+    bg: 'linear-gradient(175deg, #3B1420 0%, #4A1A28 55%, #2E0F19 100%)',
+    bgSoft: '#4A1A28',
+    ink: '#F6E4DB',
+    accent: '#D69C7E',
+    accentSoft: '#7A3548',
+    eyebrow: 'Invitation',
+    scriptTitle: true,
+    particles: '#E0AC8F',
+    dark: true,
+  },
+  ruby: {
+    bg: 'linear-gradient(175deg, #FDF3F4 0%, #FAE3E6 55%, #F5D0D6 100%)',
+    bgSoft: '#FAE3E6',
+    ink: '#7C2D3B',
+    accent: '#C34F63',
+    accentSoft: '#E39EAB',
+    eyebrow: 'Avec amour',
+    scriptTitle: true,
+    particles: '#D47183',
+  },
+  lavender: {
+    bg: 'linear-gradient(175deg, #FAF8FD 0%, #F1ECFA 55%, #E5DDF4 100%)',
+    bgSoft: '#F1ECFA',
+    ink: '#544672',
+    accent: '#8E7AB5',
+    accentSoft: '#C0B3DC',
+    eyebrow: 'Anniversaire',
+    scriptTitle: false,
+    particles: '#A695C8',
+  },
+  noir: {
+    bg: 'linear-gradient(175deg, #131313 0%, #1C1B18 55%, #0E0E0D 100%)',
+    bgSoft: '#1C1B18',
+    ink: '#F2ECDD',
+    accent: '#D4B36A',
+    accentSoft: '#3A362B',
+    eyebrow: 'Anniversaire',
+    scriptTitle: false,
+    particles: '#E2C784',
+    dark: true,
+  },
+  emerald: {
+    bg: 'linear-gradient(175deg, #0D2B24 0%, #113830 55%, #0A211C 100%)',
+    bgSoft: '#113830',
+    ink: '#EAF5EF',
+    accent: '#D9BE7F',
+    accentSoft: '#2C5C4F',
+    eyebrow: 'Reveillon',
+    scriptTitle: true,
+    particles: '#E5CC93',
+    dark: true,
+  },
+  ocean: {
+    bg: 'linear-gradient(175deg, #F3FAFC 0%, #E5F2F7 55%, #D4E8F0 100%)',
+    bgSoft: '#E5F2F7',
+    ink: '#2E566B',
+    accent: '#4E8BA8',
+    accentSoft: '#9CC4D6',
+    eyebrow: 'Naissance',
+    scriptTitle: true,
+    particles: '#74A9C2',
+  },
+  mint: {
+    bg: 'linear-gradient(175deg, #F5FCF9 0%, #E7F6EF 55%, #D6EEE2 100%)',
+    bgSoft: '#E7F6EF',
+    ink: '#3E6455',
+    accent: '#66A388',
+    accentSoft: '#A9D2BE',
+    eyebrow: 'Baby shower',
+    scriptTitle: true,
+    particles: '#86BB9F',
+  },
+  rose: {
+    bg: 'linear-gradient(175deg, #FEF7F9 0%, #FBEBF0 55%, #F7DCE6 100%)',
+    bgSoft: '#FBEBF0',
+    ink: '#77465A',
+    accent: '#C87D9B',
+    accentSoft: '#E5B4C8',
+    eyebrow: 'Naissance',
+    scriptTitle: true,
+    particles: '#D695B0',
+  },
+  forest: {
+    bg: 'linear-gradient(175deg, #F6FAF3 0%, #EAF3E4 55%, #DCEAD2 100%)',
+    bgSoft: '#EAF3E4',
+    ink: '#3F5A34',
+    accent: '#6C9457',
+    accentSoft: '#A9C899',
+    eyebrow: 'Garden party',
+    scriptTitle: false,
+    particles: '#8AAF75',
+  },
+  midnight: {
+    bg: 'linear-gradient(175deg, #171233 0%, #201A45 55%, #120E28 100%)',
+    bgSoft: '#201A45',
+    ink: '#EDEAFB',
+    accent: '#A99BE8',
+    accentSoft: '#3B3270',
+    eyebrow: 'Nouvel an',
+    scriptTitle: false,
+    particles: '#BCB0F0',
+    dark: true,
+  },
 }
 
-const t = computed(() => themes[props.accent])
+
+const t = computed(() => themes[props.accent] || themes.gold)
 
 const opened = ref(props.forceOpen)
 const opening = ref(false)
@@ -123,9 +285,59 @@ const openStyle: Record<Accent, 'seal' | 'burst' | 'sunrise' | 'bloom' | 'part'>
   sage: 'bloom',
   sky: 'part',
   neon: 'burst',
+  blush: 'seal',
+  terracotta: 'sunrise',
+  champagne: 'seal',
+  pearl: 'part',
+  navy: 'seal',
+  burgundy: 'seal',
+  ruby: 'bloom',
+  lavender: 'bloom',
+  noir: 'seal',
+  emerald: 'burst',
+  ocean: 'part',
+  mint: 'part',
+  rose: 'bloom',
+  forest: 'bloom',
+  midnight: 'burst',
 }
-const variant = computed(() => openStyle[props.accent])
-const hasMore = computed(() => Boolean(props.date || props.location || props.closing || props.timeline?.length))
+const variant = computed(() => openStyle[props.accent] || 'seal')
+const hasMore = computed(() => Boolean(props.date || props.location || props.closing || props.timeline?.length || props.rsvpSlug))
+
+// ---- RSVP ----
+const rsvpName = ref('')
+const rsvpGuests = ref(1)
+const rsvpMessage = ref('')
+const rsvpChoice = ref<null | boolean>(null)
+const rsvpSending = ref(false)
+const rsvpDone = ref(false)
+const rsvpError = ref('')
+
+async function sendRsvp() {
+  if (!props.rsvpSlug || rsvpChoice.value === null || !rsvpName.value.trim()) {
+    rsvpError.value = 'Indique ton nom et ta reponse.'
+    return
+  }
+  rsvpSending.value = true
+  rsvpError.value = ''
+  try {
+    const config = useRuntimeConfig()
+    await $fetch(`${config.public.apiBase}/cards/public/${props.rsvpSlug}/rsvp`, {
+      method: 'POST',
+      body: {
+        name: rsvpName.value.trim(),
+        attending: rsvpChoice.value,
+        guests: rsvpChoice.value ? Number(rsvpGuests.value) || 1 : 1,
+        message: rsvpMessage.value.trim() || undefined,
+      },
+    })
+    rsvpDone.value = true
+  } catch (e) {
+    rsvpError.value = "L'envoi a echoue, reessaie."
+  } finally {
+    rsvpSending.value = false
+  }
+}
 
 const monogram = computed(() => {
   const words = (props.title || '').replace(/[^\p{L}\s&]/gu, '').split(/\s+/).filter(Boolean)
@@ -148,11 +360,13 @@ function open() {
 const { target: detailsTarget, visible: detailsVisible } = useScrollReveal()
 const { target: timelineTarget, visible: timelineVisible } = useScrollReveal()
 const { target: closingTarget, visible: closingVisible } = useScrollReveal()
+const { target: rsvpTarget, visible: rsvpVisible } = useScrollReveal()
 </script>
 
 <template>
   <div
     class="experience relative w-full overflow-hidden"
+    style="container-type: inline-size"
     :class="compact ? 'rounded-3xl' : ''"
     :style="{ background: t.bg, color: t.ink }"
   >
@@ -194,17 +408,18 @@ const { target: closingTarget, visible: closingVisible } = useScrollReveal()
         <OrnamentDivider :color="t.accent" class="mt-4" />
 
         <h1
-          class="mt-6 text-balance leading-[1.08]"
-          :class="t.scriptTitle ? 'font-script text-6xl md:text-7xl' : 'font-serif-display text-5xl font-semibold md:text-6xl'"
+          class="mt-6 break-words text-balance leading-[1.1]"
+          :class="t.scriptTitle ? 'font-script' : 'font-serif-display font-semibold'"
+          :style="{ fontSize: t.scriptTitle ? 'clamp(2.4rem, 9cqw, 4.5rem)' : 'clamp(1.9rem, 7cqw, 3.6rem)' }"
         >
           {{ title }}
         </h1>
 
-        <p v-if="subtitle" class="font-serif-display mt-4 text-xl italic opacity-80 md:text-2xl">
+        <p v-if="subtitle" class="font-serif-display mt-4 break-words italic opacity-80" :style="{ fontSize: 'clamp(1rem, 3.4cqw, 1.5rem)' }">
           {{ subtitle }}
         </p>
 
-        <p v-if="message" class="mx-auto mt-6 max-w-md font-serif-display text-lg leading-relaxed opacity-70">
+        <p v-if="message" class="mx-auto mt-6 max-w-md break-words font-serif-display leading-relaxed opacity-70" :style="{ fontSize: 'clamp(0.95rem, 2.6cqw, 1.15rem)' }">
           {{ message }}
         </p>
 
@@ -327,8 +542,8 @@ const { target: closingTarget, visible: closingVisible } = useScrollReveal()
         </p>
         <div class="relative mx-auto mt-8 max-w-md px-10 py-12">
           <OrnamentFrame :color="t.accent" />
-          <p v-if="date" class="font-serif-display text-3xl font-semibold">{{ date }}</p>
-          <p v-if="location" class="font-serif-display mt-3 text-lg italic opacity-70">{{ location }}</p>
+          <p v-if="date" class="break-words font-serif-display font-semibold" :style="{ fontSize: 'clamp(1.3rem, 4.5cqw, 1.9rem)' }">{{ date }}</p>
+          <p v-if="location" class="mt-3 break-words font-serif-display italic opacity-70" :style="{ fontSize: 'clamp(0.95rem, 2.8cqw, 1.15rem)' }">{{ location }}</p>
         </div>
       </section>
 
@@ -372,10 +587,97 @@ const { target: closingTarget, visible: closingVisible } = useScrollReveal()
         <div class="pointer-events-none mx-auto mb-6 flex justify-center">
           <OrnamentFlora :color="t.accent" :opacity="0.4" class="h-20 w-28" />
         </div>
-        <p class="font-script mx-auto max-w-md text-4xl leading-snug md:text-5xl" :style="{ color: t.accent }">
+        <p class="font-script mx-auto max-w-md break-words leading-snug" :style="{ color: t.accent, fontSize: 'clamp(1.8rem, 6cqw, 3rem)' }">
           {{ closing }}
         </p>
         <OrnamentDivider :color="t.accent" class="mt-10" />
+      </section>
+
+      <!-- RSVP -->
+      <section
+        v-if="rsvpSlug"
+        ref="rsvpTarget"
+        class="relative px-6 pb-28 pt-4 transition-all duration-1000"
+        :class="rsvpVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+      >
+        <p class="text-center text-[11px] font-semibold uppercase tracking-[0.35em]" :style="{ color: t.accent }">
+          Repondez s'il vous plait
+        </p>
+        <OrnamentDivider :color="t.accent" class="mt-6" />
+
+        <div class="relative mx-auto mt-10 max-w-md px-8 py-10">
+          <OrnamentFrame :color="t.accent" />
+
+          <div v-if="rsvpDone" class="text-center">
+            <p class="font-script text-3xl" :style="{ color: t.accent }">Merci !</p>
+            <p class="mt-3 font-serif-display italic opacity-75">Votre reponse a bien ete transmise.</p>
+          </div>
+
+          <div v-else class="space-y-5">
+            <div class="flex justify-center gap-3">
+              <button
+                type="button"
+                class="focus-ring rounded-full border px-6 py-2.5 font-serif-display text-base transition"
+                :style="rsvpChoice === true
+                  ? { background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7', borderColor: t.accent }
+                  : { borderColor: t.accent, color: 'inherit', opacity: 0.8 }"
+                @click="rsvpChoice = true"
+              >
+                Je serai la
+              </button>
+              <button
+                type="button"
+                class="focus-ring rounded-full border px-6 py-2.5 font-serif-display text-base transition"
+                :style="rsvpChoice === false
+                  ? { background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7', borderColor: t.accent }
+                  : { borderColor: t.accent, color: 'inherit', opacity: 0.8 }"
+                @click="rsvpChoice = false"
+              >
+                Je ne peux pas
+              </button>
+            </div>
+
+            <input
+              v-model="rsvpName"
+              type="text"
+              placeholder="Votre nom"
+              class="focus-ring w-full rounded-xl border bg-transparent px-4 py-3 font-serif-display placeholder:opacity-50"
+              :style="{ borderColor: t.accentSoft }"
+            />
+
+            <div v-if="rsvpChoice === true" class="flex items-center justify-center gap-3">
+              <label class="font-serif-display text-sm italic opacity-70">Nous serons</label>
+              <select
+                v-model="rsvpGuests"
+                class="focus-ring rounded-xl border bg-transparent px-3 py-2 font-serif-display"
+                :style="{ borderColor: t.accentSoft }"
+              >
+                <option v-for="n in 8" :key="n" :value="n" :style="{ color: '#333' }">{{ n }}</option>
+              </select>
+              <span class="font-serif-display text-sm italic opacity-70">personne(s)</span>
+            </div>
+
+            <textarea
+              v-model="rsvpMessage"
+              rows="2"
+              placeholder="Un petit mot (optionnel)"
+              class="focus-ring w-full resize-none rounded-xl border bg-transparent px-4 py-3 font-serif-display placeholder:opacity-50"
+              :style="{ borderColor: t.accentSoft }"
+            />
+
+            <p v-if="rsvpError" class="text-center font-body text-xs" :style="{ color: t.accent }">{{ rsvpError }}</p>
+
+            <button
+              type="button"
+              :disabled="rsvpSending"
+              class="focus-ring w-full rounded-full py-3.5 font-serif-display text-lg font-semibold transition hover:scale-[1.02] disabled:opacity-60"
+              :style="{ background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7' }"
+              @click="sendRsvp"
+            >
+              {{ rsvpSending ? 'Envoi...' : 'Envoyer ma reponse' }}
+            </button>
+          </div>
+        </div>
       </section>
     </template>
   </div>

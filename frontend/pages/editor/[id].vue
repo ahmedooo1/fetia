@@ -33,6 +33,7 @@ const loading = ref(true)
 const saving = ref(false)
 const errorMsg = ref('')
 const showTimeline = ref(false)
+const editingCardId = computed(() => (route.query.card as string) || '')
 
 const form = reactive({
   title: '',
@@ -47,14 +48,19 @@ const form = reactive({
 onMounted(async () => {
   try {
     template.value = await request<Template>(`/templates/${route.params.id}`)
-    const d = template.value?.defaultData
+    let d: any = template.value?.defaultData
+    if (editingCardId.value) {
+      auth.restore()
+      const existing = await request<{ data: any }>(`/cards/${editingCardId.value}`, { auth: true })
+      d = existing.data
+    }
     form.title = d?.title || ''
     form.subtitle = d?.subtitle || ''
     form.message = d?.message || ''
     form.date = d?.date || ''
     form.location = d?.location || ''
     form.closing = d?.closing || ''
-    form.timeline = d?.timeline ? d.timeline.map((t) => ({ ...t })) : []
+    form.timeline = d?.timeline ? d.timeline.map((t: TimelineItem) => ({ ...t })) : []
     showTimeline.value = Boolean(d?.timeline?.length)
   } catch (e) {
     errorMsg.value = 'Ce modele est introuvable.'
@@ -79,16 +85,28 @@ async function saveCard() {
   saving.value = true
   errorMsg.value = ''
   try {
+    const payloadData = {
+      ...form,
+      timeline: showTimeline.value ? form.timeline.filter((t) => t.time || t.label) : [],
+      accent: template.value.defaultData?.accent,
+    }
+
+    if (editingCardId.value) {
+      const updated = await request<{ slug: string }>(`/cards/${editingCardId.value}`, {
+        method: 'PATCH',
+        auth: true,
+        body: { data: payloadData },
+      })
+      router.push(`/c/${updated.slug}`)
+      return
+    }
+
     const card = await request<{ id: string; slug: string }>('/cards', {
       method: 'POST',
       auth: true,
       body: {
         templateId: template.value.id,
-        data: {
-          ...form,
-          timeline: showTimeline.value ? form.timeline.filter((t) => t.time || t.label) : [],
-          accent: template.value.defaultData?.accent,
-        },
+        data: payloadData,
       },
     })
 
@@ -120,7 +138,7 @@ async function saveCard() {
 
     <div v-else class="grid gap-12 md:grid-cols-2">
       <div>
-        <h1 class="font-display text-3xl font-bold text-cream">Personnalise ta carte</h1>
+        <h1 class="font-display text-3xl font-bold text-cream">{{ editingCardId ? 'Modifie ta carte' : 'Personnalise ta carte' }}</h1>
         <p class="mt-2 font-body text-sm text-cream/60">Modele &laquo; {{ template.name }} &raquo;</p>
 
         <div class="mt-8 space-y-5">
@@ -221,7 +239,7 @@ async function saveCard() {
           :disabled="saving"
           @click="saveCard"
         >
-          {{ saving ? 'Un instant...' : template.isPremium ? `Debloquer pour ${(template.priceCents / 100).toFixed(2)} €` : 'Obtenir mon lien' }}
+          {{ saving ? 'Un instant...' : editingCardId ? 'Enregistrer les modifications' : template.isPremium ? `Debloquer pour ${(template.priceCents / 100).toFixed(2)} €` : 'Obtenir mon lien' }}
         </button>
       </div>
 

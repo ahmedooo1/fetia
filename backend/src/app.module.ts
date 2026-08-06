@@ -9,6 +9,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { User } from './users/user.entity';
 import { CardTemplate } from './templates/template.entity';
 import { Card } from './cards/card.entity';
+import { Rsvp } from './cards/rsvp.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { Card } from './cards/card.entity';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [User, CardTemplate, Card],
+      entities: [User, CardTemplate, Card, Rsvp],
       synchronize: process.env.NODE_ENV !== 'production',
       autoLoadEntities: true,
     }),

@@ -3,8 +3,10 @@ interface Card {
   id: string
   slug: string
   isUnlocked: boolean
+  rsvpEnabled: boolean
+  views: number
   data: { title?: string; accent?: string }
-  template: { designKey: string; name: string }
+  template: { id?: string; designKey: string; name: string }
   createdAt: string
 }
 
@@ -14,6 +16,8 @@ const router = useRouter()
 
 const cards = ref<Card[]>([])
 const loading = ref(true)
+const copiedId = ref('')
+const deletingId = ref('')
 
 onMounted(async () => {
   auth.restore()
@@ -21,23 +25,57 @@ onMounted(async () => {
     router.push('/login?redirect=/dashboard')
     return
   }
+  await load()
+})
+
+async function load() {
+  loading.value = true
   try {
     cards.value = await request<Card[]>('/cards/mine', { auth: true })
   } finally {
     loading.value = false
   }
-})
+}
 
-function copyLink(slug: string) {
-  const url = `${window.location.origin}/c/${slug}`
-  navigator.clipboard?.writeText(url)
+function cardUrl(slug: string) {
+  return `${window.location.origin}/c/${slug}`
+}
+
+function copyLink(c: Card) {
+  navigator.clipboard?.writeText(cardUrl(c.slug))
+  copiedId.value = c.id
+  setTimeout(() => {
+    if (copiedId.value === c.id) copiedId.value = ''
+  }, 1500)
+}
+
+function shareWhatsApp(c: Card) {
+  const text = encodeURIComponent(`${c.data.title || 'Une carte pour toi'} — ${cardUrl(c.slug)}`)
+  window.open(`https://wa.me/?text=${text}`, '_blank')
+}
+
+async function removeCard(c: Card) {
+  if (!window.confirm(`Supprimer definitivement la carte "${c.data.title || c.template.name}" ? Les reponses RSVP seront perdues.`)) return
+  deletingId.value = c.id
+  try {
+    await request(`/cards/${c.id}`, { method: 'DELETE', auth: true })
+    cards.value = cards.value.filter((x) => x.id !== c.id)
+  } finally {
+    deletingId.value = ''
+  }
 }
 </script>
 
 <template>
   <main class="mx-auto max-w-6xl px-6 py-14">
-    <div class="mb-10 flex items-center justify-between">
-      <h1 class="font-display text-3xl font-bold text-cream">Mes cartes</h1>
+    <div class="mb-10 flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h1 class="font-display text-3xl font-bold text-cream">Mes cartes</h1>
+        <p v-if="cards.length" class="mt-1 font-body text-sm text-cream/50">
+          {{ cards.length }} carte{{ cards.length > 1 ? 's' : '' }} &middot;
+          {{ cards.reduce((s, c) => s + (c.views || 0), 0) }} vues au total
+        </p>
+      </div>
       <NuxtLink to="/templates" class="rounded-full bg-gradient-to-r from-coral to-gold px-5 py-2.5 font-display text-sm font-bold text-ink">
         + Nouvelle carte
       </NuxtLink>
@@ -50,9 +88,9 @@ function copyLink(slug: string) {
       <NuxtLink to="/templates" class="mt-3 inline-block font-body text-sm text-gold underline">Parcourir les modeles</NuxtLink>
     </div>
 
-    <div v-else class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <div v-for="c in cards" :key="c.id">
-        <div class="relative overflow-hidden rounded-3xl shadow-xl shadow-black/40 ring-1 ring-white/10">
+    <div v-else class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div v-for="c in cards" :key="c.id" class="flex flex-col">
+        <NuxtLink :to="`/c/${c.slug}`" class="group relative block overflow-hidden rounded-3xl shadow-xl shadow-black/40 ring-1 ring-white/10 transition hover:-translate-y-1">
           <div class="pointer-events-none">
             <MagicExperience
               force-open
@@ -71,11 +109,42 @@ function copyLink(slug: string) {
             </svg>
             <p class="font-body text-sm font-medium text-cream/90">A debloquer</p>
           </div>
-        </div>
+          <span class="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-ink/75 px-3 py-1 font-body text-[11px] font-medium text-cream/90 backdrop-blur">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
+            {{ c.views || 0 }}
+          </span>
+        </NuxtLink>
+
         <div class="mt-3 flex items-center justify-between">
           <p class="font-body text-xs text-cream/50">{{ c.template.name }}</p>
-          <button v-if="c.isUnlocked" class="font-body text-xs text-gold underline" @click="copyLink(c.slug)">
-            Copier le lien
+          <p class="font-body text-[11px] text-cream/35">{{ new Date(c.createdAt).toLocaleDateString('fr-FR') }}</p>
+        </div>
+
+        <div v-if="c.isUnlocked" class="mt-3 grid grid-cols-2 gap-2">
+          <button class="focus-ring rounded-xl bg-white/5 px-3 py-2 font-body text-xs text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10" @click="copyLink(c)">
+            {{ copiedId === c.id ? 'Copie !' : 'Copier le lien' }}
+          </button>
+          <button class="focus-ring rounded-xl bg-white/5 px-3 py-2 font-body text-xs text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10" @click="shareWhatsApp(c)">
+            WhatsApp
+          </button>
+          <NuxtLink
+            :to="`/editor/${c.template.id || ''}?card=${c.id}`"
+            class="focus-ring rounded-xl bg-white/5 px-3 py-2 text-center font-body text-xs text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10"
+          >
+            Modifier
+          </NuxtLink>
+          <NuxtLink
+            :to="`/cards/${c.id}/rsvps`"
+            class="focus-ring rounded-xl bg-gold/15 px-3 py-2 text-center font-body text-xs font-semibold text-gold ring-1 ring-gold/30 transition hover:bg-gold/25"
+          >
+            Reponses RSVP
+          </NuxtLink>
+          <button
+            class="focus-ring col-span-2 rounded-xl px-3 py-2 font-body text-xs text-coral/70 ring-1 ring-coral/20 transition hover:bg-coral/10 hover:text-coral"
+            :disabled="deletingId === c.id"
+            @click="removeCard(c)"
+          >
+            {{ deletingId === c.id ? 'Suppression...' : 'Supprimer' }}
           </button>
         </div>
       </div>

@@ -20,6 +20,7 @@ interface CardData {
     timeline?: TimelineItem[]
   }
   isUnlocked: boolean
+  rsvpEnabled: boolean
   template: { designKey: string; name: string }
 }
 
@@ -68,6 +69,7 @@ onMounted(async () => {
         :location="card.data.location"
         :closing="card.data.closing"
         :timeline="card.data.timeline"
+        :rsvp-slug="card.rsvpEnabled ? card.slug : ''"
       />
       <div class="fixed bottom-5 left-1/2 z-40 -translate-x-1/2">
         <NuxtLink
