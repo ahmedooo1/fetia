@@ -12,11 +12,27 @@ Des cartes d'invitation et de fete trop belles — anniversaire, invitation, mar
 ## Fonctionnalites (MVP)
 
 - Galerie de modeles filtrable par categorie (anniversaire, fete, invitation, mariage, naissance)
-- Editeur avec apercu live de la carte (titre, sous-titre, message)
+- Editeur avec apercu live de la carte (titre, sous-titre, message, date, lieu, mot de fin, programme)
 - Comptes utilisateurs (inscription / connexion par JWT)
 - Cartes gratuites et cartes premium debloquees via Stripe Checkout
-- Page publique de carte avec animation d'ouverture + confettis, partageable par lien (`/c/:slug`)
+- Page publique de carte avec ouverture animee et sections supplementaires qui se devoilent au scroll (`/c/:slug`)
 - Tableau de bord "Mes cartes"
+
+### Le systeme de carte magique (`MagicReveal`)
+
+Chaque carte s'ouvre avec une animation propre a sa categorie (sceau de cire pour les invitations,
+eclosion florale pour les mariages, envolee de nuages pour les naissances, sunrise pour les anniversaires,
+explosion de confettis pour les fetes), avec des particules lumineuses en continu (`AmbientMagic`) et un
+texte qui scintille. Une fois ouverte, la carte peut se derouler comme un mini-site : date, lieu, programme
+(`timeline`) et mot de fin, chaque section apparaissant au scroll (`useScrollReveal`). Ces champs sont
+optionnels : une carte simple n'affiche que l'essentiel, une carte plus riche (mariage, invitation) peut
+raconter toute la journee.
+
+Au premier lancement (ou apres une mise a jour des modeles), relance le seed pour rafraichir les modeles :
+
+```bash
+npm run seed   # met a jour les 6 modeles existants avec leurs nouveaux champs
+```
 
 ## Demarrer en local
 

@@ -1,12 +1,4 @@
 <script setup lang="ts">
-const opened = ref(false)
-const confettiRef = ref<{ burst: () => void } | null>(null)
-
-function openCard() {
-  opened.value = true
-  confettiRef.value?.burst()
-}
-
 const categories = [
   { name: 'Anniversaire', accent: 'sunset', to: '/templates?category=anniversaire' },
   { name: 'Fete', accent: 'candy', to: '/templates?category=fete' },
@@ -17,8 +9,15 @@ const categories = [
 
 const steps = [
   { n: '01', title: 'Choisis un modele', text: 'Anniversaire, mariage, naissance ou soiree: pioche parmi des designs originaux.' },
-  { n: '02', title: 'Personnalise en direct', text: 'Textes, prenoms, couleurs, photo: ta carte se met a jour a chaque frappe.' },
-  { n: '03', title: 'Partage un lien', text: 'Envoie ta carte par message, elle s ouvre avec une animation sur n importe quel telephone.' },
+  { n: '02', title: 'Personnalise en direct', text: 'Textes, dates, programme, message: ta carte se met a jour a chaque frappe.' },
+  { n: '03', title: 'Partage un lien', text: 'Envoie ta carte par message, elle s ouvre avec une animation et se deroule comme un vrai mini-site.' },
+]
+
+const weddingTimeline = [
+  { time: '16:00', label: 'Ceremonie civile' },
+  { time: '18:00', label: 'Cocktail et photos' },
+  { time: '20:00', label: 'Diner et discours' },
+  { time: '22:30', label: 'Ouverture du bal' },
 ]
 </script>
 
@@ -34,7 +33,7 @@ const steps = [
           Des cartes <span class="bg-gradient-to-r from-coral via-gold to-violet bg-clip-text text-transparent">trop belles</span> pour vos moments
         </h1>
         <p class="mt-6 font-body text-lg leading-relaxed text-cream/70">
-          Anniversaires, invitations, mariages, naissances. Choisis un modele, personnalise-le en deux minutes et partage un lien qui s'ouvre comme une vraie carte.
+          Anniversaires, invitations, mariages, naissances. Choisis un modele, personnalise-le en deux minutes et partage un lien qui s'ouvre comme une vraie carte, avec ses propres details en dessous.
         </p>
         <div class="mt-8 flex flex-col items-center gap-4 sm:flex-row md:items-start">
           <NuxtLink
@@ -50,22 +49,16 @@ const steps = [
       </div>
 
       <!-- carte interactive -->
-      <div class="relative z-10 w-full max-w-sm animate-floatSlow" style="perspective: 1200px">
-        <button
-          type="button"
-          class="focus-ring block w-full text-left"
-          :style="{ transform: opened ? 'rotateY(-18deg)' : 'rotateY(0deg)', transition: 'transform 0.7s cubic-bezier(.2,.8,.2,1)' }"
-          @click="openCard"
-        >
-          <CardCanvas
-            design-key="aurora-birthday"
-            title="Joyeux anniversaire"
-            subtitle="On celebre Lina !"
-            :message="opened ? 'Merci d etre exactement toi. On t attend ce soir a 19h, ne sois pas en retard !' : 'Touche la carte pour l ouvrir'"
-            accent="sunset"
-          />
-        </button>
-        <ConfettiCanvas ref="confettiRef" />
+      <div class="relative z-10 w-full max-w-sm">
+        <MagicReveal
+          accent="sunset"
+          title="Joyeux anniversaire"
+          subtitle="On celebre Lina !"
+          message="Merci d'etre exactement toi. On t'attend ce soir, ne sois pas en retard !"
+          date="Samedi 19 septembre, 19h"
+          location="Chez Sami, Elbeuf"
+          closing="Avec tout notre amour, tes amis"
+        />
       </div>
     </section>
 
@@ -85,8 +78,8 @@ const steps = [
 
     <!-- INVITATION MAGIQUE -->
     <section class="mx-auto max-w-6xl px-6 py-20">
-      <div class="grid items-center gap-14 md:grid-cols-2">
-        <div class="order-2 md:order-1">
+      <div class="grid items-start gap-14 md:grid-cols-2">
+        <div class="order-2 md:order-1 md:sticky md:top-28">
           <span class="mb-4 inline-block rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.16em] text-gold">
             Invitations premium
           </span>
@@ -94,8 +87,8 @@ const steps = [
             Une invitation qui se <span class="bg-gradient-to-r from-gold to-coral bg-clip-text text-transparent">merite d'etre ouverte</span>
           </h2>
           <p class="mt-4 font-body text-cream/70">
-            Sceau de cire, particules lumineuses, texte qui scintille: chaque invitation Fetia se vit comme un petit moment,
-            pas comme un simple message.
+            Sceau de cire, particules lumineuses, texte qui scintille. Une fois ouverte, l'invitation se deroule
+            comme un vrai mini-site: date, lieu, programme de la journee, mot de fin.
           </p>
           <NuxtLink
             to="/templates?category=invitation"
@@ -105,10 +98,15 @@ const steps = [
           </NuxtLink>
         </div>
         <div class="order-1 mx-auto w-full max-w-sm md:order-2">
-          <InvitationEnvelope
+          <MagicReveal
+            accent="gold"
             title="Vous etes invites"
-            subtitle="Soiree du Nouvel An"
-            message="Venez celebrer avec nous, robe de fete et bonne humeur exigees."
+            subtitle="Mariage de Nora & Adam"
+            message="Venez celebrer avec nous ce jour unique, entoures de ceux qu'on aime."
+            date="14 juin 2026"
+            location="Domaine des Cerisiers, Rouen"
+            :timeline="weddingTimeline"
+            closing="On a hate de vous voir"
           />
         </div>
       </div>
@@ -129,7 +127,7 @@ const steps = [
     <!-- CTA FINAL -->
     <section class="mx-auto max-w-4xl px-6 py-20 text-center">
       <h2 class="font-display text-3xl font-bold text-cream md:text-4xl">Prete a faire sourire quelqu'un ?</h2>
-      <p class="mx-auto mt-4 max-w-md font-body text-cream/60">
+      <p class="mx-auto mt-4 font-body text-cream/60">
         Les modeles gratuits sont utilisables tout de suite, sans carte bancaire.
       </p>
       <NuxtLink
