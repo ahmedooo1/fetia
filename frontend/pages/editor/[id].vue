@@ -70,7 +70,7 @@ async function onPhotoSelected(e: Event) {
     })
     form.photoUrl = res.url
   } catch (err) {
-    errorMsg.value = "L'upload de la photo a echoue (jpg, png ou webp, 5 Mo max)."
+    errorMsg.value = "L'upload de la photo a echoue (jpg, png ou webp, 20 Mo max)."
   } finally {
     uploadingPhoto.value = false
     input.value = ''

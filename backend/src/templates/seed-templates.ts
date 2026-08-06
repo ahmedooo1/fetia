@@ -2,12 +2,13 @@ import { DataSource } from 'typeorm';
 import { CardTemplate } from './template.entity';
 import { User } from '../users/user.entity';
 import { Card } from '../cards/card.entity';
+import { Rsvp } from '../cards/rsvp.entity';
 
 // Lance ce script avec: npm run seed
 const dataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  entities: [User, CardTemplate, Card],
+  entities: [User, CardTemplate, Card, Rsvp],
   synchronize: true,
 });
 
@@ -48,7 +49,7 @@ const templates = [
     name: 'Golden Invite',
     category: 'invitation',
     designKey: 'golden-invite',
-    isPremium: true,
+    isPremium: false,
     priceCents: 299,
     defaultData: {
       title: 'Vous etes invites',
@@ -70,7 +71,7 @@ const templates = [
     name: 'Botanic',
     category: 'mariage',
     designKey: 'botanic-wedding',
-    isPremium: true,
+    isPremium: false,
     priceCents: 499,
     defaultData: {
       title: '{prenom1} & {prenom2}',
@@ -108,7 +109,7 @@ const templates = [
     name: 'Neon Nights',
     category: 'fete',
     designKey: 'neon-party',
-    isPremium: true,
+    isPremium: false,
     priceCents: 399,
     defaultData: {
       title: 'Neon Nights',
@@ -131,7 +132,7 @@ const templates = [
     name: 'Blush Romance',
     category: 'mariage',
     designKey: 'blush-romance',
-    isPremium: true,
+    isPremium: false,
     priceCents: 499,
     defaultData: {
       title: '{prenom1} & {prenom2}',
@@ -152,7 +153,7 @@ const templates = [
     name: 'Terracotta Boheme',
     category: 'mariage',
     designKey: 'terracotta-boheme',
-    isPremium: true,
+    isPremium: false,
     priceCents: 499,
     defaultData: {
       title: '{prenom1} & {prenom2}',
@@ -168,7 +169,7 @@ const templates = [
     name: 'Champagne',
     category: 'mariage',
     designKey: 'champagne-fiancailles',
-    isPremium: true,
+    isPremium: false,
     priceCents: 399,
     defaultData: {
       title: 'On se fiance !',
@@ -200,7 +201,7 @@ const templates = [
     name: 'Nuit Etoilee',
     category: 'invitation',
     designKey: 'nuit-etoilee-gala',
-    isPremium: true,
+    isPremium: false,
     priceCents: 399,
     defaultData: {
       title: 'Soiree de gala',
@@ -221,7 +222,7 @@ const templates = [
     name: 'Bordeaux Intime',
     category: 'invitation',
     designKey: 'bordeaux-intime',
-    isPremium: true,
+    isPremium: false,
     priceCents: 299,
     defaultData: {
       title: 'Diner chez nous',
@@ -268,7 +269,7 @@ const templates = [
     name: 'Or Noir',
     category: 'anniversaire',
     designKey: 'or-noir-30',
-    isPremium: true,
+    isPremium: false,
     priceCents: 399,
     defaultData: {
       title: '30 ans, rien que ca',
@@ -289,7 +290,7 @@ const templates = [
     name: 'Emeraude',
     category: 'fete',
     designKey: 'emeraude-nye',
-    isPremium: true,
+    isPremium: false,
     priceCents: 399,
     defaultData: {
       title: 'Reveillon 2027',
@@ -367,7 +368,7 @@ const templates = [
     name: 'Minuit',
     category: 'fete',
     designKey: 'minuit-nye',
-    isPremium: true,
+    isPremium: false,
     priceCents: 299,
     defaultData: {
       title: 'Minuit pile',

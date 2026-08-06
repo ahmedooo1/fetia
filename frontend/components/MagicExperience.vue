@@ -45,6 +45,8 @@ const props = withDefaults(
   },
 )
 
+type Layout = 'classic' | 'poster' | 'editorial' | 'pastel' | 'celebration'
+
 interface Theme {
   bg: string
   bgSoft: string
@@ -55,10 +57,15 @@ interface Theme {
   scriptTitle: boolean
   particles: string
   dark?: boolean
+  layout: Layout
 }
 
+// classic = mariage (floral, romantique) · poster = fete (grand format, punchy)
+// editorial = invitation (raffine, minimal) · pastel = naissance (doux, arrondi)
+// celebration = anniversaire (rayonnant, dramatique)
 const themes: Record<Accent, Theme> = {
   gold: {
+    layout: 'classic',
     bg: 'linear-gradient(175deg, #FDF8EE 0%, #F8EFDD 55%, #F3E7CC 100%)',
     bgSoft: '#F8EFDD',
     ink: '#5C4A22',
@@ -69,6 +76,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#C9A85C',
   },
   sage: {
+    layout: 'classic',
     bg: 'linear-gradient(175deg, #F9FBF6 0%, #F0F5EB 55%, #E5EEDF 100%)',
     bgSoft: '#F0F5EB',
     ink: '#44553F',
@@ -79,6 +87,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#8FAF94',
   },
   sky: {
+    layout: 'pastel',
     bg: 'linear-gradient(175deg, #F7FBFF 0%, #EDF5FC 55%, #E1EEF8 100%)',
     bgSoft: '#EDF5FC',
     ink: '#3D5468',
@@ -89,6 +98,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#9DBFDA',
   },
   sunset: {
+    layout: 'celebration',
     bg: 'linear-gradient(175deg, #FFF9F0 0%, #FDEEDC 55%, #FAE3C8 100%)',
     bgSoft: '#FDEEDC',
     ink: '#6B4A2B',
@@ -99,6 +109,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#E0A96A',
   },
   candy: {
+    layout: 'poster',
     bg: 'linear-gradient(175deg, #1E1233 0%, #251741 55%, #1A0F2D 100%)',
     bgSoft: '#251741',
     ink: '#F6EFFF',
@@ -110,6 +121,7 @@ const themes: Record<Accent, Theme> = {
     dark: true,
   },
   neon: {
+    layout: 'poster',
     bg: 'linear-gradient(175deg, #12091F 0%, #1B0E2E 55%, #120A21 100%)',
     bgSoft: '#1B0E2E',
     ink: '#FFF3F6',
@@ -121,6 +133,7 @@ const themes: Record<Accent, Theme> = {
     dark: true,
   },
   blush: {
+    layout: 'classic',
     bg: 'linear-gradient(175deg, #FDF6F7 0%, #FAEAEC 55%, #F5DDE1 100%)',
     bgSoft: '#FAEAEC',
     ink: '#6E4249',
@@ -131,6 +144,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#D89AA6',
   },
   terracotta: {
+    layout: 'classic',
     bg: 'linear-gradient(175deg, #FBF4EE 0%, #F6E7DA 55%, #EFD8C4 100%)',
     bgSoft: '#F6E7DA',
     ink: '#7A4A31',
@@ -141,6 +155,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#CE8B64',
   },
   champagne: {
+    layout: 'editorial',
     bg: 'linear-gradient(175deg, #FCFAF4 0%, #F7F1E2 55%, #F0E6CD 100%)',
     bgSoft: '#F7F1E2',
     ink: '#6E5F3B',
@@ -151,6 +166,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#CCB672',
   },
   pearl: {
+    layout: 'editorial',
     bg: 'linear-gradient(175deg, #FDFDFC 0%, #F6F5F1 55%, #ECEAE3 100%)',
     bgSoft: '#F6F5F1',
     ink: '#5C5A50',
@@ -161,6 +177,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#BBB6A2',
   },
   navy: {
+    layout: 'editorial',
     bg: 'linear-gradient(175deg, #0F1B33 0%, #14233F 55%, #0C1628 100%)',
     bgSoft: '#14233F',
     ink: '#EFE7D2',
@@ -172,6 +189,7 @@ const themes: Record<Accent, Theme> = {
     dark: true,
   },
   burgundy: {
+    layout: 'editorial',
     bg: 'linear-gradient(175deg, #3B1420 0%, #4A1A28 55%, #2E0F19 100%)',
     bgSoft: '#4A1A28',
     ink: '#F6E4DB',
@@ -183,6 +201,7 @@ const themes: Record<Accent, Theme> = {
     dark: true,
   },
   ruby: {
+    layout: 'editorial',
     bg: 'linear-gradient(175deg, #FDF3F4 0%, #FAE3E6 55%, #F5D0D6 100%)',
     bgSoft: '#FAE3E6',
     ink: '#7C2D3B',
@@ -193,6 +212,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#D47183',
   },
   lavender: {
+    layout: 'celebration',
     bg: 'linear-gradient(175deg, #FAF8FD 0%, #F1ECFA 55%, #E5DDF4 100%)',
     bgSoft: '#F1ECFA',
     ink: '#544672',
@@ -203,6 +223,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#A695C8',
   },
   noir: {
+    layout: 'celebration',
     bg: 'linear-gradient(175deg, #131313 0%, #1C1B18 55%, #0E0E0D 100%)',
     bgSoft: '#1C1B18',
     ink: '#F2ECDD',
@@ -214,6 +235,7 @@ const themes: Record<Accent, Theme> = {
     dark: true,
   },
   emerald: {
+    layout: 'poster',
     bg: 'linear-gradient(175deg, #0D2B24 0%, #113830 55%, #0A211C 100%)',
     bgSoft: '#113830',
     ink: '#EAF5EF',
@@ -225,6 +247,7 @@ const themes: Record<Accent, Theme> = {
     dark: true,
   },
   ocean: {
+    layout: 'pastel',
     bg: 'linear-gradient(175deg, #F3FAFC 0%, #E5F2F7 55%, #D4E8F0 100%)',
     bgSoft: '#E5F2F7',
     ink: '#2E566B',
@@ -235,6 +258,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#74A9C2',
   },
   mint: {
+    layout: 'pastel',
     bg: 'linear-gradient(175deg, #F5FCF9 0%, #E7F6EF 55%, #D6EEE2 100%)',
     bgSoft: '#E7F6EF',
     ink: '#3E6455',
@@ -245,6 +269,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#86BB9F',
   },
   rose: {
+    layout: 'pastel',
     bg: 'linear-gradient(175deg, #FEF7F9 0%, #FBEBF0 55%, #F7DCE6 100%)',
     bgSoft: '#FBEBF0',
     ink: '#77465A',
@@ -255,6 +280,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#D695B0',
   },
   forest: {
+    layout: 'poster',
     bg: 'linear-gradient(175deg, #F6FAF3 0%, #EAF3E4 55%, #DCEAD2 100%)',
     bgSoft: '#EAF3E4',
     ink: '#3F5A34',
@@ -265,6 +291,7 @@ const themes: Record<Accent, Theme> = {
     particles: '#8AAF75',
   },
   midnight: {
+    layout: 'poster',
     bg: 'linear-gradient(175deg, #171233 0%, #201A45 55%, #120E28 100%)',
     bgSoft: '#201A45',
     ink: '#EDEAFB',
@@ -279,6 +306,79 @@ const themes: Record<Accent, Theme> = {
 
 
 const t = computed(() => themes[props.accent] || themes.gold)
+const layout = computed(() => t.value.layout)
+
+const frameStyle: Record<Layout, 'floral' | 'minimal' | 'geometric' | 'dashed' | 'rays'> = {
+  classic: 'floral',
+  poster: 'geometric',
+  editorial: 'minimal',
+  pastel: 'dashed',
+  celebration: 'rays',
+}
+const dividerStyle: Record<Layout, 'floral' | 'bold' | 'line' | 'dots' | 'rays'> = {
+  classic: 'floral',
+  poster: 'bold',
+  editorial: 'line',
+  pastel: 'dots',
+  celebration: 'rays',
+}
+const frame = computed(() => frameStyle[layout.value])
+const divider = computed(() => dividerStyle[layout.value])
+
+const titleFontClass = computed(() => {
+  switch (layout.value) {
+    case 'poster':
+      return 'font-poster uppercase tracking-tight'
+    case 'editorial':
+      return 'font-editorial italic'
+    case 'pastel':
+      return 'font-playful'
+    case 'celebration':
+      return 'font-celebration font-bold'
+    default:
+      return t.value.scriptTitle ? 'font-script' : 'font-serif-display font-semibold'
+  }
+})
+const titleSize = computed(() => {
+  switch (layout.value) {
+    case 'poster':
+      return 'clamp(2.4rem, 10cqw, 4.6rem)'
+    case 'editorial':
+      return 'clamp(1.8rem, 6cqw, 3.1rem)'
+    case 'pastel':
+      return 'clamp(2.1rem, 7.5cqw, 3.6rem)'
+    case 'celebration':
+      return 'clamp(2.3rem, 8cqw, 4rem)'
+    default:
+      return t.value.scriptTitle ? 'clamp(2.4rem, 9cqw, 4.5rem)' : 'clamp(1.9rem, 7cqw, 3.6rem)'
+  }
+})
+const bodyFontClass = computed(() => (layout.value === 'poster' ? 'font-body' : layout.value === 'pastel' ? 'font-playful' : 'font-serif-display'))
+const accentFontClass = computed(() => {
+  switch (layout.value) {
+    case 'poster':
+      return 'font-poster uppercase tracking-tight'
+    case 'pastel':
+      return 'font-playful'
+    default:
+      return 'font-script'
+  }
+})
+const eyebrowBadge = computed(() => layout.value === 'poster' || layout.value === 'pastel')
+const photoWrapClass = computed(() => {
+  switch (layout.value) {
+    case 'poster':
+      return 'rounded-lg border-[7px] -rotate-3'
+    case 'editorial':
+      return 'rounded-sm border'
+    case 'pastel':
+      return 'rounded-full border-4 border-dashed'
+    case 'celebration':
+      return 'rounded-full border-4'
+    default:
+      return 'rounded-t-full border-4'
+  }
+})
 
 const opened = ref(props.forceOpen)
 const opening = ref(false)
@@ -442,21 +542,50 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
       class="relative flex flex-col items-center justify-center px-6 text-center"
       :class="compact ? 'min-h-[540px] py-14' : 'min-h-[92vh] py-20'"
     >
-      <OrnamentFrame :color="t.accent" />
+      <OrnamentFrame :color="t.accent" :style="frame" />
 
-      <!-- ornements floraux du hero -->
-      <div class="pointer-events-none absolute inset-x-0 top-6 flex justify-center">
-        <OrnamentFlora :color="t.accent" :opacity="0.55" class="h-28 w-40" />
+      <!-- ornements du hero, selon le layout -->
+      <template v-if="layout === 'classic'">
+        <div class="pointer-events-none absolute inset-x-0 top-6 flex justify-center">
+          <OrnamentFlora :color="t.accent" :opacity="0.55" class="h-28 w-40" />
+        </div>
+        <div class="pointer-events-none absolute -left-8 top-1/3 -rotate-[30deg]">
+          <OrnamentFlora :color="t.accent" :opacity="0.28" class="h-24 w-32" />
+        </div>
+        <div class="pointer-events-none absolute -right-8 top-1/2 rotate-[30deg] -scale-x-100">
+          <OrnamentFlora :color="t.accent" :opacity="0.28" class="h-24 w-32" />
+        </div>
+        <div class="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center -scale-y-100">
+          <OrnamentFlora :color="t.accent" :opacity="0.4" class="h-24 w-36" />
+        </div>
+      </template>
+
+      <!-- POSTER : diagonales franches -->
+      <div v-else-if="layout === 'poster'" class="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.14]" :style="{ color: t.accent }">
+        <div class="absolute -left-1/4 top-0 h-[200%] w-16 -rotate-[18deg]" :style="{ background: 'currentColor' }" />
+        <div class="absolute left-1/4 top-0 h-[200%] w-8 -rotate-[18deg]" :style="{ background: 'currentColor' }" />
+        <div class="absolute right-0 top-0 h-[200%] w-16 -rotate-[18deg]" :style="{ background: 'currentColor' }" />
       </div>
-      <div class="pointer-events-none absolute -left-8 top-1/3 -rotate-[30deg]">
-        <OrnamentFlora :color="t.accent" :opacity="0.28" class="h-24 w-32" />
-      </div>
-      <div class="pointer-events-none absolute -right-8 top-1/2 rotate-[30deg] -scale-x-100">
-        <OrnamentFlora :color="t.accent" :opacity="0.28" class="h-24 w-32" />
-      </div>
-      <div class="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center -scale-y-100">
-        <OrnamentFlora :color="t.accent" :opacity="0.4" class="h-24 w-36" />
-      </div>
+
+      <!-- EDITORIAL : filets fins haut/bas, tres sobre -->
+      <template v-else-if="layout === 'editorial'">
+        <div class="pointer-events-none absolute inset-x-10 top-10 h-px opacity-40" :style="{ background: t.accent }" />
+        <div class="pointer-events-none absolute inset-x-10 bottom-10 h-px opacity-40" :style="{ background: t.accent }" />
+      </template>
+
+      <!-- PASTEL : bulles floues -->
+      <template v-else-if="layout === 'pastel'">
+        <div class="pointer-events-none absolute -left-10 top-10 h-32 w-32 rounded-full opacity-40 blur-2xl" :style="{ background: t.accentSoft }" />
+        <div class="pointer-events-none absolute -right-6 top-1/3 h-24 w-24 rounded-full opacity-40 blur-2xl" :style="{ background: t.accent }" />
+        <div class="pointer-events-none absolute bottom-10 left-1/4 h-28 w-28 rounded-full opacity-30 blur-2xl" :style="{ background: t.accentSoft }" />
+      </template>
+
+      <!-- CELEBRATION : rayons depuis le centre -->
+      <svg v-else-if="layout === 'celebration'" class="pointer-events-none absolute left-1/2 top-1/2 h-[140cqw] w-[140cqw] -translate-x-1/2 -translate-y-1/2 opacity-[0.16]" viewBox="0 0 200 200" :style="{ color: t.accent }">
+        <g stroke="currentColor" stroke-width="1">
+          <line v-for="i in 24" :key="i" x1="100" y1="100" :x2="100 + 100 * Math.cos((i * Math.PI) / 12)" :y2="100 + 100 * Math.sin((i * Math.PI) / 12)" />
+        </g>
+      </svg>
 
       <!-- contenu revele -->
       <div
@@ -465,7 +594,8 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
       >
         <div v-if="resolvedPhoto" class="mx-auto mb-7 w-fit">
           <div
-            class="overflow-hidden rounded-t-full border-4 shadow-xl"
+            class="overflow-hidden shadow-xl"
+            :class="photoWrapClass"
             :style="{ borderColor: t.accentSoft, width: 'clamp(120px, 34cqw, 190px)', height: 'clamp(150px, 44cqw, 245px)' }"
           >
             <img :src="resolvedPhoto" alt="" class="h-full w-full object-cover" />
@@ -473,27 +603,35 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
         </div>
 
         <p
+          v-if="!eyebrowBadge"
           class="text-[11px] font-semibold uppercase tracking-[0.35em]"
           :style="{ color: t.accent }"
         >
           {{ t.eyebrow }}
         </p>
+        <p
+          v-else
+          class="mx-auto w-fit rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.25em] shadow-sm"
+          :style="{ background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7' }"
+        >
+          {{ t.eyebrow }}
+        </p>
 
-        <OrnamentDivider :color="t.accent" class="mt-4" />
+        <OrnamentDivider :color="t.accent" :style="divider" class="mt-4" />
 
         <h1
           class="mt-6 break-words text-balance leading-[1.1]"
-          :class="t.scriptTitle ? 'font-script' : 'font-serif-display font-semibold'"
-          :style="{ fontSize: t.scriptTitle ? 'clamp(2.4rem, 9cqw, 4.5rem)' : 'clamp(1.9rem, 7cqw, 3.6rem)' }"
+          :class="titleFontClass"
+          :style="{ fontSize: titleSize }"
         >
           {{ title }}
         </h1>
 
-        <p v-if="subtitle" class="font-serif-display mt-4 break-words italic opacity-80" :style="{ fontSize: 'clamp(1rem, 3.4cqw, 1.5rem)' }">
+        <p v-if="subtitle" class="mt-4 break-words italic opacity-80" :class="bodyFontClass" :style="{ fontSize: 'clamp(1rem, 3.4cqw, 1.5rem)' }">
           {{ subtitle }}
         </p>
 
-        <p v-if="message" class="mx-auto mt-6 max-w-md break-words font-serif-display leading-relaxed opacity-70" :style="{ fontSize: 'clamp(0.95rem, 2.6cqw, 1.15rem)' }">
+        <p v-if="message" class="mx-auto mt-6 max-w-md break-words leading-relaxed opacity-70" :class="bodyFontClass" :style="{ fontSize: 'clamp(0.95rem, 2.6cqw, 1.15rem)' }">
           {{ message }}
         </p>
 
@@ -516,7 +654,7 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
         aria-label="Ouvrir la carte"
         @click="open"
       >
-        <OrnamentFrame :color="t.accent" />
+        <OrnamentFrame :color="t.accent" :style="frame" />
 
         <!-- enveloppe (plis) pour le theme gold -->
         <svg v-if="variant === 'seal'" class="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -526,22 +664,37 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
           <polygon points="100,0 100,100 50,49" :fill="t.accentSoft" fill-opacity="0.12" :stroke="t.accent" stroke-opacity="0.2" stroke-width="0.2" vector-effect="non-scaling-stroke" />
         </svg>
 
-        <!-- florals sur la cover, disposition symetrique riche -->
-        <div class="pointer-events-none absolute inset-x-0 top-8 flex justify-center">
-          <OrnamentFlora :color="t.accent" :opacity="0.6" class="h-32 w-44" />
+        <!-- decor de la cover, selon le layout -->
+        <template v-if="layout === 'classic'">
+          <div class="pointer-events-none absolute inset-x-0 top-8 flex justify-center">
+            <OrnamentFlora :color="t.accent" :opacity="0.6" class="h-32 w-44" />
+          </div>
+          <div class="pointer-events-none absolute left-4 top-1/4 -rotate-[24deg]">
+            <OrnamentFlora :color="t.accent" :opacity="0.3" class="h-20 w-28" />
+          </div>
+          <div class="pointer-events-none absolute right-4 top-1/4 rotate-[24deg] -scale-x-100">
+            <OrnamentFlora :color="t.accent" :opacity="0.3" class="h-20 w-28" />
+          </div>
+          <div class="pointer-events-none absolute bottom-8 left-8 rotate-[12deg]">
+            <OrnamentFlora :color="t.accent" :opacity="0.35" class="h-24 w-32" />
+          </div>
+          <div class="pointer-events-none absolute bottom-8 right-8 -rotate-[12deg] -scale-x-100">
+            <OrnamentFlora :color="t.accent" :opacity="0.35" class="h-24 w-32" />
+          </div>
+        </template>
+        <div v-else-if="layout === 'poster'" class="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.16]" :style="{ color: t.accent }">
+          <div class="absolute -left-1/4 top-0 h-[200%] w-16 -rotate-[18deg]" :style="{ background: 'currentColor' }" />
+          <div class="absolute right-0 top-0 h-[200%] w-16 -rotate-[18deg]" :style="{ background: 'currentColor' }" />
         </div>
-        <div class="pointer-events-none absolute left-4 top-1/4 -rotate-[24deg]">
-          <OrnamentFlora :color="t.accent" :opacity="0.3" class="h-20 w-28" />
-        </div>
-        <div class="pointer-events-none absolute right-4 top-1/4 rotate-[24deg] -scale-x-100">
-          <OrnamentFlora :color="t.accent" :opacity="0.3" class="h-20 w-28" />
-        </div>
-        <div class="pointer-events-none absolute bottom-8 left-8 rotate-[12deg]">
-          <OrnamentFlora :color="t.accent" :opacity="0.35" class="h-24 w-32" />
-        </div>
-        <div class="pointer-events-none absolute bottom-8 right-8 -rotate-[12deg] -scale-x-100">
-          <OrnamentFlora :color="t.accent" :opacity="0.35" class="h-24 w-32" />
-        </div>
+        <template v-else-if="layout === 'pastel'">
+          <div class="pointer-events-none absolute left-6 top-10 h-24 w-24 rounded-full opacity-40 blur-2xl" :style="{ background: t.accentSoft }" />
+          <div class="pointer-events-none absolute bottom-10 right-6 h-24 w-24 rounded-full opacity-40 blur-2xl" :style="{ background: t.accent }" />
+        </template>
+        <svg v-else-if="layout === 'celebration'" class="pointer-events-none absolute left-1/2 top-1/2 h-[120cqw] w-[120cqw] -translate-x-1/2 -translate-y-1/2 opacity-20" viewBox="0 0 200 200" :style="{ color: t.accent }">
+          <g stroke="currentColor" stroke-width="1">
+            <line v-for="i in 20" :key="i" x1="100" y1="100" :x2="100 + 100 * Math.cos((i * Math.PI) / 10)" :y2="100 + 100 * Math.sin((i * Math.PI) / 10)" />
+          </g>
+        </svg>
 
         <!-- SEAL -->
         <template v-if="variant === 'seal'">
@@ -637,14 +790,14 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
         <div v-if="!countdown.over" class="mx-auto mt-8 flex max-w-md items-stretch justify-center gap-3">
           <div v-for="unit in [[countdown.d, 'jours'], [countdown.h, 'heures'], [countdown.m, 'min'], [countdown.s, 'sec']]" :key="unit[1] as string" class="flex-1">
             <div class="relative rounded-2xl border px-2 py-4" :style="{ borderColor: t.accentSoft }">
-              <p class="font-serif-display font-semibold tabular-nums" :style="{ fontSize: 'clamp(1.6rem, 6cqw, 2.6rem)' }">
+              <p class="font-semibold tabular-nums" :class="bodyFontClass" :style="{ fontSize: 'clamp(1.6rem, 6cqw, 2.6rem)' }">
                 {{ String(unit[0]).padStart(2, '0') }}
               </p>
             </div>
             <p class="mt-2 text-[10px] font-semibold uppercase tracking-[0.2em] opacity-60">{{ unit[1] }}</p>
           </div>
         </div>
-        <p v-else class="font-script mt-6 text-4xl" :style="{ color: t.accent }">Le grand jour est arrive</p>
+        <p v-else class="mt-6 text-4xl" :class="accentFontClass" :style="{ color: t.accent }">Le grand jour est arrive</p>
       </section>
 
       <!-- DETAILS -->
@@ -654,20 +807,21 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
         class="relative px-6 py-20 text-center transition-all duration-1000"
         :class="detailsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
       >
-        <OrnamentDivider :color="t.accent" />
+        <OrnamentDivider :color="t.accent" :style="divider" />
         <p class="mt-8 text-[11px] font-semibold uppercase tracking-[0.35em]" :style="{ color: t.accent }">
           Quand &amp; ou
         </p>
         <div class="relative mx-auto mt-8 max-w-md px-10 py-12">
-          <OrnamentFrame :color="t.accent" />
-          <p v-if="date" class="break-words font-serif-display font-semibold" :style="{ fontSize: 'clamp(1.3rem, 4.5cqw, 1.9rem)' }">{{ date }}</p>
-          <p v-if="location" class="mt-3 break-words font-serif-display italic opacity-70" :style="{ fontSize: 'clamp(0.95rem, 2.8cqw, 1.15rem)' }">{{ location }}</p>
+          <OrnamentFrame :color="t.accent" :style="frame" />
+          <p v-if="date" class="break-words font-semibold" :class="bodyFontClass" :style="{ fontSize: 'clamp(1.3rem, 4.5cqw, 1.9rem)' }">{{ date }}</p>
+          <p v-if="location" class="mt-3 break-words italic opacity-70" :class="bodyFontClass" :style="{ fontSize: 'clamp(0.95rem, 2.8cqw, 1.15rem)' }">{{ location }}</p>
           <a
             v-if="mapsUrl"
             :href="mapsUrl"
             target="_blank"
             rel="noopener"
-            class="focus-ring mt-6 inline-flex items-center gap-2 rounded-full border px-5 py-2.5 font-serif-display text-sm transition hover:scale-105"
+            class="focus-ring mt-6 inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm transition hover:scale-105"
+            :class="bodyFontClass"
             :style="{ borderColor: t.accent, color: t.accent }"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -686,13 +840,13 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
         class="relative px-6 py-20 transition-all duration-1000"
         :class="timelineVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
       >
-        <div class="pointer-events-none absolute right-0 top-10 rotate-[24deg] -scale-x-100">
+        <div v-if="layout === 'classic'" class="pointer-events-none absolute right-0 top-10 rotate-[24deg] -scale-x-100">
           <OrnamentFlora :color="t.accent" :opacity="0.2" class="h-28 w-36" />
         </div>
         <p class="text-center text-[11px] font-semibold uppercase tracking-[0.35em]" :style="{ color: t.accent }">
           Le programme
         </p>
-        <OrnamentDivider :color="t.accent" class="mt-6" />
+        <OrnamentDivider :color="t.accent" :style="divider" class="mt-6" />
         <div class="mx-auto mt-12 max-w-md">
           <div v-for="(item, i) in timeline" :key="i" class="relative flex gap-6 pb-12 last:pb-0">
             <div class="flex flex-col items-center">
@@ -702,8 +856,8 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
               <span v-if="i < timeline.length - 1" class="mt-2 w-px flex-1" :style="{ background: t.accent, opacity: 0.25 }" />
             </div>
             <div class="-mt-0.5">
-              <p class="font-serif-display text-xl font-semibold" :style="{ color: t.accent }">{{ item.time }}</p>
-              <p class="font-serif-display mt-1 text-lg italic opacity-75">{{ item.label }}</p>
+              <p class="text-xl font-semibold" :class="bodyFontClass" :style="{ color: t.accent }">{{ item.time }}</p>
+              <p class="mt-1 text-lg italic opacity-75" :class="bodyFontClass">{{ item.label }}</p>
             </div>
           </div>
         </div>
@@ -716,13 +870,13 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
         class="relative px-6 pb-24 pt-16 text-center transition-all duration-1000"
         :class="closingVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
       >
-        <div class="pointer-events-none mx-auto mb-6 flex justify-center">
+        <div v-if="layout === 'classic'" class="pointer-events-none mx-auto mb-6 flex justify-center">
           <OrnamentFlora :color="t.accent" :opacity="0.4" class="h-20 w-28" />
         </div>
-        <p class="font-script mx-auto max-w-md break-words leading-snug" :style="{ color: t.accent, fontSize: 'clamp(1.8rem, 6cqw, 3rem)' }">
+        <p class="mx-auto max-w-md break-words leading-snug" :class="accentFontClass" :style="{ color: t.accent, fontSize: 'clamp(1.8rem, 6cqw, 3rem)' }">
           {{ closing }}
         </p>
-        <OrnamentDivider :color="t.accent" class="mt-10" />
+        <OrnamentDivider :color="t.accent" :style="divider" class="mt-10" />
       </section>
 
       <!-- RSVP -->
@@ -735,21 +889,22 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
         <p class="text-center text-[11px] font-semibold uppercase tracking-[0.35em]" :style="{ color: t.accent }">
           Repondez s'il vous plait
         </p>
-        <OrnamentDivider :color="t.accent" class="mt-6" />
+        <OrnamentDivider :color="t.accent" :style="divider" class="mt-6" />
 
         <div class="relative mx-auto mt-10 max-w-md px-8 py-10">
-          <OrnamentFrame :color="t.accent" />
+          <OrnamentFrame :color="t.accent" :style="frame" />
 
           <div v-if="rsvpDone" class="text-center">
-            <p class="font-script text-3xl" :style="{ color: t.accent }">Merci !</p>
-            <p class="mt-3 font-serif-display italic opacity-75">Votre reponse a bien ete transmise.</p>
+            <p class="text-3xl" :class="accentFontClass" :style="{ color: t.accent }">Merci !</p>
+            <p class="mt-3 italic opacity-75" :class="bodyFontClass">Votre reponse a bien ete transmise.</p>
           </div>
 
           <div v-else class="space-y-5">
             <div class="flex justify-center gap-3">
               <button
                 type="button"
-                class="focus-ring rounded-full border px-6 py-2.5 font-serif-display text-base transition"
+                class="focus-ring rounded-full border px-6 py-2.5 text-base transition"
+                :class="bodyFontClass"
                 :style="rsvpChoice === true
                   ? { background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7', borderColor: t.accent }
                   : { borderColor: t.accent, color: 'inherit', opacity: 0.8 }"
@@ -759,7 +914,8 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
               </button>
               <button
                 type="button"
-                class="focus-ring rounded-full border px-6 py-2.5 font-serif-display text-base transition"
+                class="focus-ring rounded-full border px-6 py-2.5 text-base transition"
+                :class="bodyFontClass"
                 :style="rsvpChoice === false
                   ? { background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7', borderColor: t.accent }
                   : { borderColor: t.accent, color: 'inherit', opacity: 0.8 }"
@@ -773,27 +929,30 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
               v-model="rsvpName"
               type="text"
               placeholder="Votre nom"
-              class="focus-ring w-full rounded-xl border bg-transparent px-4 py-3 font-serif-display placeholder:opacity-50"
+              class="focus-ring w-full rounded-xl border bg-transparent px-4 py-3 placeholder:opacity-50"
+              :class="bodyFontClass"
               :style="{ borderColor: t.accentSoft }"
             />
 
             <div v-if="rsvpChoice === true" class="flex items-center justify-center gap-3">
-              <label class="font-serif-display text-sm italic opacity-70">Nous serons</label>
+              <label class="text-sm italic opacity-70" :class="bodyFontClass">Nous serons</label>
               <select
                 v-model="rsvpGuests"
-                class="focus-ring rounded-xl border bg-transparent px-3 py-2 font-serif-display"
+                class="focus-ring rounded-xl border bg-transparent px-3 py-2"
+                :class="bodyFontClass"
                 :style="{ borderColor: t.accentSoft }"
               >
                 <option v-for="n in 8" :key="n" :value="n" :style="{ color: '#333' }">{{ n }}</option>
               </select>
-              <span class="font-serif-display text-sm italic opacity-70">personne(s)</span>
+              <span class="text-sm italic opacity-70" :class="bodyFontClass">personne(s)</span>
             </div>
 
             <textarea
               v-model="rsvpMessage"
               rows="2"
               placeholder="Un petit mot (optionnel)"
-              class="focus-ring w-full resize-none rounded-xl border bg-transparent px-4 py-3 font-serif-display placeholder:opacity-50"
+              class="focus-ring w-full resize-none rounded-xl border bg-transparent px-4 py-3 placeholder:opacity-50"
+              :class="bodyFontClass"
               :style="{ borderColor: t.accentSoft }"
             />
 
@@ -802,7 +961,8 @@ const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
             <button
               type="button"
               :disabled="rsvpSending"
-              class="focus-ring w-full rounded-full py-3.5 font-serif-display text-lg font-semibold transition hover:scale-[1.02] disabled:opacity-60"
+              class="focus-ring w-full rounded-full py-3.5 text-lg font-semibold transition hover:scale-[1.02] disabled:opacity-60"
+              :class="bodyFontClass"
               :style="{ background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7' }"
               @click="sendRsvp"
             >

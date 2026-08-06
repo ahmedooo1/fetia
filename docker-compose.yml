@@ -22,7 +22,7 @@ services:
     build: ./backend
     restart: unless-stopped
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       PORT: 3001
       DATABASE_URL: postgres://fetia:fetia@postgres:5432/fetia
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
