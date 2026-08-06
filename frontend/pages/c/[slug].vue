@@ -45,7 +45,7 @@ onMounted(async () => {
 })
 
 const magicRef = ref()
-const { downloading, downloadError, downloadImage, downloadPdf } = useCardDownload(magicRef)
+const { downloading, downloadError, downloadImage } = useCardDownload(magicRef)
 const downloadName = computed(() => card.value?.data.title || 'ma-carte')
 </script>
 
@@ -87,19 +87,11 @@ const downloadName = computed(() => card.value?.data.title || 'ma-carte')
         <div class="flex items-center gap-2">
           <button
             type="button"
-            :disabled="!!downloading"
+            :disabled="downloading"
             class="rounded-full bg-night/85 px-4 py-2.5 font-body text-xs font-semibold text-cream/90 shadow-2xl backdrop-blur transition hover:scale-105 disabled:opacity-60"
             @click="downloadImage(downloadName)"
           >
-            {{ downloading === 'image' ? 'Preparation...' : 'Telecharger l\'image' }}
-          </button>
-          <button
-            type="button"
-            :disabled="!!downloading"
-            class="rounded-full bg-night/85 px-4 py-2.5 font-body text-xs font-semibold text-cream/90 shadow-2xl backdrop-blur transition hover:scale-105 disabled:opacity-60"
-            @click="downloadPdf(downloadName)"
-          >
-            {{ downloading === 'pdf' ? 'Preparation...' : 'Telecharger en PDF' }}
+            {{ downloading ? 'Preparation...' : 'Telecharger l\'image' }}
           </button>
           <NuxtLink
             to="/templates"

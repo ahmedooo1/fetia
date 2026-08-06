@@ -16,7 +16,7 @@ function slugifyFilename(name: string) {
 }
 
 export function useCardDownload(cardRef: Ref<CardHandle | null>) {
-  const downloading = ref<'' | 'image' | 'pdf'>('')
+  const downloading = ref(false)
   const downloadError = ref('')
 
   async function ensureOpenAndSettled() {
@@ -47,7 +47,7 @@ export function useCardDownload(cardRef: Ref<CardHandle | null>) {
 
   async function downloadImage(filename = 'ma-carte') {
     downloadError.value = ''
-    downloading.value = 'image'
+    downloading.value = true
     try {
       const canvas = await captureCanvas()
       const blob: Blob | null = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
@@ -61,29 +61,9 @@ export function useCardDownload(cardRef: Ref<CardHandle | null>) {
     } catch (e) {
       downloadError.value = "Le telechargement a echoue, reessaie."
     } finally {
-      downloading.value = ''
+      downloading.value = false
     }
   }
 
-  async function downloadPdf(filename = 'ma-carte') {
-    downloadError.value = ''
-    downloading.value = 'pdf'
-    try {
-      const canvas = await captureCanvas()
-      const { jsPDF } = await import('jspdf')
-      const imgData = canvas.toDataURL('image/jpeg', 0.95)
-      const pdf = new jsPDF({
-        unit: 'px',
-        format: [canvas.width, canvas.height],
-      })
-      pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height)
-      pdf.save(`${slugifyFilename(filename)}.pdf`)
-    } catch (e) {
-      downloadError.value = "Le telechargement a echoue, reessaie."
-    } finally {
-      downloading.value = ''
-    }
-  }
-
-  return { downloading, downloadError, downloadImage, downloadPdf }
+  return { downloading, downloadError, downloadImage }
 }

@@ -54,7 +54,7 @@ const form = reactive({
 const uploadingPhoto = ref(false)
 
 const previewRef = ref()
-const { downloading, downloadError, downloadImage, downloadPdf } = useCardDownload(previewRef)
+const { downloading, downloadError, downloadImage } = useCardDownload(previewRef)
 
 async function onPhotoSelected(e: Event) {
   const input = e.target as HTMLInputElement
@@ -340,19 +340,11 @@ async function saveCard() {
         <div class="mt-4 flex items-center justify-center gap-2">
           <button
             type="button"
-            :disabled="!!downloading"
+            :disabled="downloading"
             class="focus-ring rounded-full bg-white/5 px-4 py-2 font-body text-xs font-semibold text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10 disabled:opacity-60"
             @click="downloadImage(form.title)"
           >
-            {{ downloading === 'image' ? 'Preparation...' : 'Telecharger l\'image' }}
-          </button>
-          <button
-            type="button"
-            :disabled="!!downloading"
-            class="focus-ring rounded-full bg-white/5 px-4 py-2 font-body text-xs font-semibold text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10 disabled:opacity-60"
-            @click="downloadPdf(form.title)"
-          >
-            {{ downloading === 'pdf' ? 'Preparation...' : 'Telecharger en PDF' }}
+            {{ downloading ? 'Preparation...' : 'Telecharger l\'image' }}
           </button>
         </div>
         <p v-if="downloadError" class="mt-2 text-center font-body text-xs text-coral">{{ downloadError }}</p>
