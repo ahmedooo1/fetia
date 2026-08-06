@@ -1,140 +1,165 @@
 <script setup lang="ts">
-const categories = [
-  { name: 'Anniversaire', accent: 'sunset', to: '/templates?category=anniversaire' },
-  { name: 'Fete', accent: 'candy', to: '/templates?category=fete' },
-  { name: 'Invitation', accent: 'gold', to: '/templates?category=invitation' },
-  { name: 'Mariage', accent: 'sage', to: '/templates?category=mariage' },
-  { name: 'Naissance', accent: 'sky', to: '/templates?category=naissance' },
-]
-
-const steps = [
-  { n: '01', title: 'Choisis un modele', text: 'Anniversaire, mariage, naissance ou soiree: pioche parmi des designs originaux.' },
-  { n: '02', title: 'Personnalise en direct', text: 'Textes, dates, programme, message: ta carte se met a jour a chaque frappe.' },
-  { n: '03', title: 'Partage un lien', text: 'Envoie ta carte par message, elle s ouvre avec une animation et se deroule comme un vrai mini-site.' },
-]
-
-const weddingTimeline = [
-  { time: '16:00', label: 'Ceremonie civile' },
-  { time: '18:00', label: 'Cocktail et photos' },
-  { time: '20:00', label: 'Diner et discours' },
-  { time: '22:30', label: 'Ouverture du bal' },
+const showcase = [
+  {
+    accent: 'gold',
+    label: 'Mariage elegant',
+    demo: '/demo/gold',
+    props: {
+      accent: 'gold',
+      forceOpen: true,
+      compact: true,
+      title: 'Nora & Adam',
+      subtitle: 'ont la joie de vous convier a leur mariage',
+      date: 'Samedi 14 juin 2026',
+      location: 'Domaine des Cerisiers, Rouen',
+    },
+  },
+  {
+    accent: 'sage',
+    label: 'Champetre',
+    demo: '/demo/sage',
+    props: {
+      accent: 'sage',
+      forceOpen: true,
+      compact: true,
+      title: 'Lea & Mehdi',
+      subtitle: 'se disent oui',
+      date: 'Samedi 5 septembre 2026',
+      location: 'La Grange aux Saules, Elbeuf',
+    },
+  },
+  {
+    accent: 'sky',
+    label: 'Naissance',
+    demo: '/demo/sky',
+    props: {
+      accent: 'sky',
+      forceOpen: true,
+      compact: true,
+      title: 'Bienvenue Nour',
+      subtitle: 'notre petite etoile',
+      date: '2 aout 2026',
+    },
+  },
+  {
+    accent: 'sunset',
+    label: 'Anniversaire',
+    demo: '/demo/sunset',
+    props: {
+      accent: 'sunset',
+      forceOpen: true,
+      compact: true,
+      title: 'Lina a 25 ans',
+      subtitle: 'et ca se fete',
+      date: 'Samedi 19 septembre, 19h',
+    },
+  },
+  {
+    accent: 'neon',
+    label: 'Soiree',
+    demo: '/demo/neon',
+    props: {
+      accent: 'neon',
+      forceOpen: true,
+      compact: true,
+      title: 'Neon Nights',
+      subtitle: 'la soiree dont on parlera encore lundi',
+      date: 'Samedi 25 juillet, 23h',
+    },
+  },
 ]
 </script>
 
 <template>
   <main>
-    <!-- HERO -->
-    <section class="relative mx-auto flex max-w-6xl flex-col items-center gap-16 px-6 pb-24 pt-16 md:flex-row md:pt-24">
-      <div class="relative z-10 max-w-xl text-center md:text-left">
-        <span class="mb-5 inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.16em] text-cream/70">
-          Cartes en ligne &middot; sans design requis
-        </span>
-        <h1 class="font-display text-5xl font-extrabold leading-[1.02] text-cream text-balance md:text-6xl">
-          Des cartes <span class="bg-gradient-to-r from-coral via-gold to-violet bg-clip-text text-transparent">trop belles</span> pour vos moments
-        </h1>
-        <p class="mt-6 font-body text-lg leading-relaxed text-cream/70">
-          Anniversaires, invitations, mariages, naissances. Choisis un modele, personnalise-le en deux minutes et partage un lien qui s'ouvre comme une vraie carte, avec ses propres details en dessous.
-        </p>
-        <div class="mt-8 flex flex-col items-center gap-4 sm:flex-row md:items-start">
-          <NuxtLink
-            to="/templates"
-            class="rounded-full bg-gradient-to-r from-coral to-gold px-7 py-3.5 font-display text-base font-bold text-ink shadow-xl shadow-coral/20 transition hover:scale-105"
-          >
-            Creer ma carte
-          </NuxtLink>
-          <NuxtLink to="/templates" class="font-body text-sm font-medium text-cream/70 underline-offset-4 hover:text-cream hover:underline">
-            Voir les modeles &rarr;
-          </NuxtLink>
-        </div>
-      </div>
-
-      <!-- carte interactive -->
-      <div class="relative z-10 w-full max-w-sm">
-        <MagicReveal
-          accent="sunset"
-          title="Joyeux anniversaire"
-          subtitle="On celebre Lina !"
-          message="Merci d'etre exactement toi. On t'attend ce soir, ne sois pas en retard !"
-          date="Samedi 19 septembre, 19h"
-          location="Chez Sami, Elbeuf"
-          closing="Avec tout notre amour, tes amis"
-        />
-      </div>
-    </section>
-
-    <!-- CATEGORIES -->
-    <section class="mx-auto max-w-6xl px-6 py-10">
-      <div class="flex flex-wrap justify-center gap-3 md:justify-start">
+    <!-- HERO : la demo EST le hero -->
+    <section class="relative mx-auto max-w-6xl px-6 pb-10 pt-14 text-center">
+      <span class="mb-5 inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.16em] text-cream/70">
+        Cartes et invitations en ligne
+      </span>
+      <h1 class="mx-auto max-w-3xl font-display text-5xl font-extrabold leading-[1.02] text-cream text-balance md:text-6xl">
+        Des invitations que vos proches vont <span class="bg-gradient-to-r from-coral via-gold to-violet bg-clip-text text-transparent">ouvrir deux fois</span>
+      </h1>
+      <p class="mx-auto mt-6 max-w-xl font-body text-lg leading-relaxed text-cream/70">
+        Sceau de cire, ornements dessines a la main, programme qui se devoile en scrollant. Chaque carte est un mini-site que vous partagez en un lien.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <NuxtLink
-          v-for="cat in categories"
-          :key="cat.name"
-          :to="cat.to"
-          class="rounded-full border border-white/10 bg-white/5 px-5 py-2.5 font-body text-sm text-cream/80 transition hover:border-white/20 hover:bg-white/10 hover:text-cream"
+          to="/templates"
+          class="rounded-full bg-gradient-to-r from-coral to-gold px-7 py-3.5 font-display text-base font-bold text-ink shadow-xl shadow-coral/20 transition hover:scale-105"
         >
-          {{ cat.name }}
+          Creer ma carte
+        </NuxtLink>
+        <NuxtLink to="/demo/gold" class="font-body text-sm font-medium text-cream/70 underline-offset-4 hover:text-cream hover:underline">
+          Voir une demo en plein ecran &rarr;
         </NuxtLink>
       </div>
     </section>
 
-    <!-- INVITATION MAGIQUE -->
-    <section class="mx-auto max-w-6xl px-6 py-20">
-      <div class="grid items-start gap-14 md:grid-cols-2">
-        <div class="order-2 md:order-1 md:sticky md:top-28">
-          <span class="mb-4 inline-block rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.16em] text-gold">
-            Invitations premium
-          </span>
-          <h2 class="font-display text-3xl font-bold text-cream text-balance md:text-4xl">
-            Une invitation qui se <span class="bg-gradient-to-r from-gold to-coral bg-clip-text text-transparent">merite d'etre ouverte</span>
-          </h2>
-          <p class="mt-4 font-body text-cream/70">
-            Sceau de cire, particules lumineuses, texte qui scintille. Une fois ouverte, l'invitation se deroule
-            comme un vrai mini-site: date, lieu, programme de la journee, mot de fin.
-          </p>
-          <NuxtLink
-            to="/templates?category=invitation"
-            class="mt-6 inline-block rounded-full bg-gradient-to-r from-gold to-coral px-7 py-3.5 font-display text-base font-bold text-ink shadow-xl shadow-gold/20 transition hover:scale-105"
-          >
-            Voir les invitations
-          </NuxtLink>
-        </div>
-        <div class="order-1 mx-auto w-full max-w-sm md:order-2">
-          <MagicReveal
-            accent="gold"
-            title="Vous etes invites"
-            subtitle="Mariage de Nora & Adam"
-            message="Venez celebrer avec nous ce jour unique, entoures de ceux qu'on aime."
-            date="14 juin 2026"
-            location="Domaine des Cerisiers, Rouen"
-            :timeline="weddingTimeline"
-            closing="On a hate de vous voir"
-          />
-        </div>
+    <!-- LA DEMO PRINCIPALE : l'invitation en direct, pleine largeur -->
+    <section class="mx-auto max-w-4xl px-4 pb-24 md:px-6">
+      <div class="overflow-hidden rounded-3xl shadow-2xl shadow-black/50 ring-1 ring-white/10">
+        <MagicExperience
+          accent="gold"
+          title="Nora & Adam"
+          subtitle="ont la joie de vous convier a leur mariage"
+          message="Votre presence sera notre plus beau cadeau."
+          date="Samedi 14 juin 2026"
+          location="Domaine des Cerisiers, Rouen"
+          :timeline="[
+            { time: '16h00', label: 'Ceremonie' },
+            { time: '18h00', label: 'Cocktail dans les jardins' },
+            { time: '20h00', label: 'Diner aux chandelles' },
+            { time: '22h30', label: 'Ouverture du bal' },
+          ]"
+          closing="Avec tout notre amour"
+          compact
+        />
       </div>
+      <p class="mt-4 text-center font-body text-xs text-cream/40">
+        Demo interactive — touchez le sceau, puis faites defiler a l'interieur de la carte
+      </p>
     </section>
 
-    <!-- COMMENT CA MARCHE -->
-    <section class="mx-auto max-w-6xl px-6 py-20">
-      <h2 class="mb-12 font-display text-3xl font-bold text-cream md:text-4xl">Trois etapes, une carte prete</h2>
-      <div class="grid gap-10 md:grid-cols-3">
-        <div v-for="step in steps" :key="step.n" class="relative">
-          <span class="font-display text-5xl font-extrabold text-cream/10">{{ step.n }}</span>
-          <h3 class="mt-2 font-display text-xl font-bold text-cream">{{ step.title }}</h3>
-          <p class="mt-2 font-body text-sm leading-relaxed text-cream/60">{{ step.text }}</p>
-        </div>
+    <!-- GALERIE DES 5 AMBIANCES : cartes ouvertes, pleine largeur en alternance -->
+    <section class="mx-auto max-w-6xl px-6 pb-10">
+      <h2 class="mb-3 text-center font-display text-3xl font-bold text-cream md:text-4xl">Cinq ambiances, cinq emotions</h2>
+      <p class="mx-auto mb-12 max-w-lg text-center font-body text-cream/60">
+        Chaque ambiance a ses ornements, sa typographie et sa propre facon de s'ouvrir. Cliquez pour la vivre en plein ecran.
+      </p>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        <NuxtLink
+          v-for="(item, i) in showcase"
+          :key="item.accent"
+          :to="item.demo"
+          class="group relative block overflow-hidden rounded-3xl shadow-xl shadow-black/40 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1.5 hover:shadow-2xl"
+          :class="i === 0 ? 'md:col-span-2' : ''"
+        >
+          <div class="pointer-events-none">
+            <MagicExperience v-bind="item.props" />
+          </div>
+          <div class="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/60 to-transparent p-5">
+            <span class="font-display text-lg font-bold text-white drop-shadow">{{ item.label }}</span>
+            <span class="rounded-full bg-white/15 px-4 py-1.5 font-body text-xs font-semibold text-white backdrop-blur transition group-hover:bg-white/25">
+              Voir en plein ecran &rarr;
+            </span>
+          </div>
+        </NuxtLink>
       </div>
     </section>
 
     <!-- CTA FINAL -->
-    <section class="mx-auto max-w-4xl px-6 py-20 text-center">
-      <h2 class="font-display text-3xl font-bold text-cream md:text-4xl">Prete a faire sourire quelqu'un ?</h2>
+    <section class="mx-auto max-w-4xl px-6 py-24 text-center">
+      <h2 class="font-display text-3xl font-bold text-cream md:text-4xl">Votre evenement merite mieux qu'un message</h2>
       <p class="mx-auto mt-4 font-body text-cream/60">
-        Les modeles gratuits sont utilisables tout de suite, sans carte bancaire.
+        Modeles gratuits disponibles tout de suite, sans carte bancaire.
       </p>
       <NuxtLink
         to="/templates"
         class="mt-8 inline-block rounded-full bg-gradient-to-r from-coral to-gold px-8 py-4 font-display font-bold text-ink shadow-xl shadow-coral/20 transition hover:scale-105"
       >
-        Parcourir les modeles
+        Creer ma carte
       </NuxtLink>
     </section>
   </main>

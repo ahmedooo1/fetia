@@ -226,17 +226,20 @@ async function saveCard() {
       </div>
 
       <div class="mx-auto w-full max-w-sm md:sticky md:top-28 md:self-start">
-        <MagicReveal
-          force-open
-          :accent="(template.defaultData?.accent as any) || 'sunset'"
-          :title="form.title"
-          :subtitle="form.subtitle"
-          :message="form.message"
-          :date="form.date"
-          :location="form.location"
-          :closing="form.closing"
-          :timeline="showTimeline ? form.timeline : []"
-        />
+        <div class="overflow-hidden rounded-3xl shadow-xl ring-1 ring-white/10">
+          <MagicExperience
+            force-open
+            compact
+            :accent="(template.defaultData?.accent as any) || 'gold'"
+            :title="form.title"
+            :subtitle="form.subtitle"
+            :message="form.message"
+            :date="form.date"
+            :location="form.location"
+            :closing="form.closing"
+            :timeline="showTimeline ? form.timeline : []"
+          />
+        </div>
       </div>
     </div>
   </main>

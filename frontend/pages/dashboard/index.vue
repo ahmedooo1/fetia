@@ -50,14 +50,28 @@ function copyLink(slug: string) {
       <NuxtLink to="/templates" class="mt-3 inline-block font-body text-sm text-gold underline">Parcourir les modeles</NuxtLink>
     </div>
 
-    <div v-else class="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
+    <div v-else class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <div v-for="c in cards" :key="c.id">
-        <CardCanvas
-          :design-key="c.template.designKey"
-          :title="c.data.title"
-          :accent="(c.data.accent as any) || 'sunset'"
-          :locked="!c.isUnlocked"
-        />
+        <div class="relative overflow-hidden rounded-3xl shadow-xl shadow-black/40 ring-1 ring-white/10">
+          <div class="pointer-events-none">
+            <MagicExperience
+              force-open
+              compact
+              :accent="(c.data.accent as any) || 'gold'"
+              :title="c.data.title"
+            />
+          </div>
+          <div
+            v-if="!c.isUnlocked"
+            class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-ink/70 text-center backdrop-blur-sm"
+          >
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" class="text-gold">
+              <rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6" />
+              <path d="M8 10V7a4 4 0 118 0v3" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+            <p class="font-body text-sm font-medium text-cream/90">A debloquer</p>
+          </div>
+        </div>
         <div class="mt-3 flex items-center justify-between">
           <p class="font-body text-xs text-cream/50">{{ c.template.name }}</p>
           <button v-if="c.isUnlocked" class="font-body text-xs text-gold underline" @click="copyLink(c.slug)">

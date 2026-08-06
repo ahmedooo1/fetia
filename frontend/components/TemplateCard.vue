@@ -17,14 +17,16 @@ defineProps<{
     :to="`/editor/${template.id}`"
     class="group block transition duration-300 hover:-translate-y-1.5"
   >
-    <div class="relative">
-      <CardCanvas
-        :design-key="template.designKey"
-        :title="template.defaultData?.title"
-        :subtitle="template.defaultData?.subtitle"
-        :message="template.defaultData?.message"
-        :accent="(template.defaultData?.accent as any) || 'sunset'"
-      />
+    <div class="relative overflow-hidden rounded-3xl shadow-xl shadow-black/40 ring-1 ring-white/10">
+      <div class="pointer-events-none">
+        <MagicExperience
+          force-open
+          compact
+          :accent="(template.defaultData?.accent as any) || 'gold'"
+          :title="template.defaultData?.title"
+          :subtitle="template.defaultData?.subtitle"
+        />
+      </div>
       <span
         v-if="template.isPremium"
         class="absolute right-3 top-3 rounded-full bg-ink/80 px-3 py-1 text-[11px] font-semibold text-gold backdrop-blur"
