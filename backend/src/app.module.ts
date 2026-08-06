@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { TemplatesModule } from './templates/templates.module';
 import { CardsModule } from './cards/cards.module';
 import { PaymentsModule } from './payments/payments.module';
+import { UploadsModule } from './uploads/uploads.module';
 import { User } from './users/user.entity';
 import { CardTemplate } from './templates/template.entity';
 import { Card } from './cards/card.entity';
@@ -26,6 +27,7 @@ import { Rsvp } from './cards/rsvp.entity';
     TemplatesModule,
     CardsModule,
     PaymentsModule,
+    UploadsModule,
   ],
 })
 export class AppModule {}

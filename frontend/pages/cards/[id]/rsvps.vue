@@ -33,12 +33,43 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+function exportCsv() {
+  if (!data.value?.rsvps.length) return
+  const header = ['Nom', 'Reponse', 'Personnes', 'Message', 'Date']
+  const rows = data.value.rsvps.map((r) => [
+    r.name,
+    r.attending ? 'Present' : 'Absent',
+    r.attending ? String(r.guests || 1) : '0',
+    r.message || '',
+    new Date(r.createdAt).toLocaleDateString('fr-FR'),
+  ])
+  const escape = (v: string) => `"${String(v).replace(/"/g, '""')}"`
+  // BOM UTF-8 + separateur ; pour Excel francais
+  const csv = '\ufeff' + [header, ...rows].map((row) => row.map(escape).join(';')).join('\r\n')
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'reponses-invites.csv'
+  a.click()
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
   <main class="mx-auto max-w-3xl px-6 py-14">
     <NuxtLink to="/dashboard" class="font-body text-sm text-cream/50 hover:text-cream">&larr; Retour a mes cartes</NuxtLink>
-    <h1 class="mt-3 font-display text-3xl font-bold text-cream">Reponses des invites</h1>
+    <div class="mt-3 flex flex-wrap items-center justify-between gap-4">
+      <h1 class="font-display text-3xl font-bold text-cream">Reponses des invites</h1>
+      <button
+        v-if="data?.rsvps.length"
+        class="focus-ring rounded-full bg-white/5 px-5 py-2.5 font-body text-sm text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10"
+        @click="exportCsv"
+      >
+        Exporter pour Excel (.csv)
+      </button>
+    </div>
 
     <div v-if="loading" class="mt-8 font-body text-cream/60">Chargement...</div>
 

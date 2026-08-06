@@ -17,6 +17,9 @@ interface CardData {
     date?: string
     location?: string
     closing?: string
+    photoUrl?: string
+    eventAt?: string
+    musicUrl?: string
     timeline?: TimelineItem[]
   }
   isUnlocked: boolean
@@ -69,6 +72,9 @@ onMounted(async () => {
         :location="card.data.location"
         :closing="card.data.closing"
         :timeline="card.data.timeline"
+        :photo-url="card.data.photoUrl"
+        :event-at="card.data.eventAt"
+        :music-url="card.data.musicUrl"
         :rsvp-slug="card.rsvpEnabled ? card.slug : ''"
       />
       <div class="fixed bottom-5 left-1/2 z-40 -translate-x-1/2">

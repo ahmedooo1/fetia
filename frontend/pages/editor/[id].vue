@@ -19,6 +19,9 @@ interface Template {
     date?: string
     location?: string
     closing?: string
+    photoUrl?: string
+    eventAt?: string
+    musicUrl?: string
     timeline?: TimelineItem[]
   }
 }
@@ -42,8 +45,37 @@ const form = reactive({
   date: '',
   location: '',
   closing: '',
+  photoUrl: '',
+  eventAt: '',
+  musicUrl: '',
   timeline: [] as TimelineItem[],
 })
+
+const uploadingPhoto = ref(false)
+
+async function onPhotoSelected(e: Event) {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  uploadingPhoto.value = true
+  errorMsg.value = ''
+  try {
+    const config = useRuntimeConfig()
+    const fd = new FormData()
+    fd.append('file', file)
+    const res = await $fetch<{ url: string }>(`${config.public.apiBase}/uploads`, {
+      method: 'POST',
+      body: fd,
+      headers: auth.token ? { Authorization: `Bearer ${auth.token}` } : {},
+    })
+    form.photoUrl = res.url
+  } catch (err) {
+    errorMsg.value = "L'upload de la photo a echoue (jpg, png ou webp, 5 Mo max)."
+  } finally {
+    uploadingPhoto.value = false
+    input.value = ''
+  }
+}
 
 onMounted(async () => {
   try {
@@ -60,6 +92,9 @@ onMounted(async () => {
     form.date = d?.date || ''
     form.location = d?.location || ''
     form.closing = d?.closing || ''
+    form.photoUrl = d?.photoUrl || ''
+    form.eventAt = d?.eventAt || ''
+    form.musicUrl = d?.musicUrl || ''
     form.timeline = d?.timeline ? d.timeline.map((t: TimelineItem) => ({ ...t })) : []
     showTimeline.value = Boolean(d?.timeline?.length)
   } catch (e) {
@@ -202,6 +237,44 @@ async function saveCard() {
           </div>
 
           <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+            <p class="mb-3 font-body text-sm font-medium text-cream/80">Photo (optionnelle)</p>
+            <div class="flex items-center gap-4">
+              <div v-if="form.photoUrl" class="h-20 w-16 overflow-hidden rounded-t-full border-2 border-gold/40">
+                <img :src="form.photoUrl.startsWith('http') ? form.photoUrl : `${$config.public.apiBase.replace(/\/api\/?$/, '')}${form.photoUrl}`" alt="" class="h-full w-full object-cover" />
+              </div>
+              <div class="flex-1 space-y-2">
+                <label class="focus-ring inline-block cursor-pointer rounded-full bg-white/10 px-4 py-2 font-body text-xs text-cream/80 transition hover:bg-white/15">
+                  {{ uploadingPhoto ? 'Envoi...' : form.photoUrl ? 'Changer la photo' : 'Ajouter une photo' }}
+                  <input type="file" accept="image/jpeg,image/png,image/webp" class="hidden" :disabled="uploadingPhoto" @change="onPhotoSelected" />
+                </label>
+                <button v-if="form.photoUrl" type="button" class="block font-body text-xs text-coral/70 underline" @click="form.photoUrl = ''">
+                  Retirer
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label class="mb-1.5 block font-body text-sm font-medium text-cream/80">Jour J (compte a rebours)</label>
+              <input
+                v-model="form.eventAt"
+                type="datetime-local"
+                class="focus-ring w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-body text-cream [color-scheme:dark]"
+              />
+            </div>
+            <div>
+              <label class="mb-1.5 block font-body text-sm font-medium text-cream/80">Musique (URL mp3, optionnel)</label>
+              <input
+                v-model="form.musicUrl"
+                type="url"
+                placeholder="https://.../musique.mp3"
+                class="focus-ring w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-body text-cream placeholder:text-cream/30"
+              />
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4">
             <label class="flex items-center gap-2 font-body text-sm font-medium text-cream/80">
               <input v-model="showTimeline" type="checkbox" class="accent-gold" />
               Ajouter un programme (deroule de la journee)
@@ -255,6 +328,8 @@ async function saveCard() {
             :date="form.date"
             :location="form.location"
             :closing="form.closing"
+            :photo-url="form.photoUrl"
+            :event-at="form.eventAt"
             :timeline="showTimeline ? form.timeline : []"
           />
         </div>

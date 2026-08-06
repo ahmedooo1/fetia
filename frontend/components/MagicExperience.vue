@@ -23,6 +23,9 @@ const props = withDefaults(
     forceOpen?: boolean
     compact?: boolean
     rsvpSlug?: string
+    photoUrl?: string
+    eventAt?: string
+    musicUrl?: string
   }>(),
   {
     accent: 'gold',
@@ -36,6 +39,9 @@ const props = withDefaults(
     forceOpen: false,
     compact: false,
     rsvpSlug: '',
+    photoUrl: '',
+    eventAt: '',
+    musicUrl: '',
   },
 )
 
@@ -357,10 +363,69 @@ function open() {
   }, 750)
 }
 
+// ---- PHOTO ----
+const resolvedPhoto = computed(() => {
+  if (!props.photoUrl) return ''
+  if (props.photoUrl.startsWith('http')) return props.photoUrl
+  const config = useRuntimeConfig()
+  const origin = (config.public.apiBase as string).replace(/\/api\/?$/, '')
+  return `${origin}${props.photoUrl}`
+})
+
+// ---- COUNTDOWN ----
+const now = ref(Date.now())
+let countdownTimer: ReturnType<typeof setInterval> | null = null
+onMounted(() => {
+  countdownTimer = setInterval(() => {
+    now.value = Date.now()
+  }, 1000)
+})
+onBeforeUnmount(() => {
+  if (countdownTimer) clearInterval(countdownTimer)
+})
+const countdown = computed(() => {
+  if (!props.eventAt) return null
+  const target = new Date(props.eventAt).getTime()
+  if (Number.isNaN(target)) return null
+  const diff = target - now.value
+  if (diff <= 0) return { over: true, d: 0, h: 0, m: 0, s: 0 }
+  return {
+    over: false,
+    d: Math.floor(diff / 86400000),
+    h: Math.floor((diff % 86400000) / 3600000),
+    m: Math.floor((diff % 3600000) / 60000),
+    s: Math.floor((diff % 60000) / 1000),
+  }
+})
+
+// ---- MAPS ----
+const mapsUrl = computed(() =>
+  props.location
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(props.location)}`
+    : '',
+)
+
+// ---- MUSIQUE ----
+const audioRef = ref<HTMLAudioElement | null>(null)
+const musicPlaying = ref(false)
+function toggleMusic() {
+  const el = audioRef.value
+  if (!el) return
+  if (musicPlaying.value) {
+    el.pause()
+    musicPlaying.value = false
+  } else {
+    el.play().then(() => {
+      musicPlaying.value = true
+    }).catch(() => undefined)
+  }
+}
+
 const { target: detailsTarget, visible: detailsVisible } = useScrollReveal()
 const { target: timelineTarget, visible: timelineVisible } = useScrollReveal()
 const { target: closingTarget, visible: closingVisible } = useScrollReveal()
 const { target: rsvpTarget, visible: rsvpVisible } = useScrollReveal()
+const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
 </script>
 
 <template>
@@ -398,6 +463,15 @@ const { target: rsvpTarget, visible: rsvpVisible } = useScrollReveal()
         class="relative z-10 mx-auto max-w-xl transition-all duration-1000 ease-out"
         :class="opened ? 'opacity-100 translate-y-0' : 'pointer-events-none opacity-0 translate-y-4'"
       >
+        <div v-if="resolvedPhoto" class="mx-auto mb-7 w-fit">
+          <div
+            class="overflow-hidden rounded-t-full border-4 shadow-xl"
+            :style="{ borderColor: t.accentSoft, width: 'clamp(120px, 34cqw, 190px)', height: 'clamp(150px, 44cqw, 245px)' }"
+          >
+            <img :src="resolvedPhoto" alt="" class="h-full w-full object-cover" />
+          </div>
+        </div>
+
         <p
           class="text-[11px] font-semibold uppercase tracking-[0.35em]"
           :style="{ color: t.accent }"
@@ -525,10 +599,54 @@ const { target: rsvpTarget, visible: rsvpVisible } = useScrollReveal()
       </button>
 
       <ConfettiCanvas v-if="variant === 'burst'" ref="confettiRef" class="z-30" />
+
+      <!-- musique de fond -->
+      <template v-if="musicUrl && opened">
+        <audio ref="audioRef" :src="musicUrl" loop preload="none" />
+        <button
+          type="button"
+          class="focus-ring absolute right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-full shadow-lg backdrop-blur transition hover:scale-110"
+          :style="{ background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7' }"
+          :aria-label="musicPlaying ? 'Couper la musique' : 'Jouer la musique'"
+          @click="toggleMusic"
+        >
+          <svg v-if="!musicPlaying" width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M9 18V6l10-2v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="6.5" cy="18" r="2.5" stroke="currentColor" stroke-width="1.8" />
+            <circle cx="16.5" cy="16" r="2.5" stroke="currentColor" stroke-width="1.8" />
+          </svg>
+          <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+          </svg>
+        </button>
+      </template>
     </section>
 
     <!-- ============ SECTIONS ============ -->
     <template v-if="opened && hasMore">
+      <!-- COMPTE A REBOURS -->
+      <section
+        v-if="countdown"
+        ref="countdownTarget"
+        class="relative px-6 py-16 text-center transition-all duration-1000"
+        :class="countdownVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+      >
+        <p class="text-[11px] font-semibold uppercase tracking-[0.35em]" :style="{ color: t.accent }">
+          {{ countdown.over ? 'C est aujourd hui' : 'Jour J dans' }}
+        </p>
+        <div v-if="!countdown.over" class="mx-auto mt-8 flex max-w-md items-stretch justify-center gap-3">
+          <div v-for="unit in [[countdown.d, 'jours'], [countdown.h, 'heures'], [countdown.m, 'min'], [countdown.s, 'sec']]" :key="unit[1] as string" class="flex-1">
+            <div class="relative rounded-2xl border px-2 py-4" :style="{ borderColor: t.accentSoft }">
+              <p class="font-serif-display font-semibold tabular-nums" :style="{ fontSize: 'clamp(1.6rem, 6cqw, 2.6rem)' }">
+                {{ String(unit[0]).padStart(2, '0') }}
+              </p>
+            </div>
+            <p class="mt-2 text-[10px] font-semibold uppercase tracking-[0.2em] opacity-60">{{ unit[1] }}</p>
+          </div>
+        </div>
+        <p v-else class="font-script mt-6 text-4xl" :style="{ color: t.accent }">Le grand jour est arrive</p>
+      </section>
+
       <!-- DETAILS -->
       <section
         v-if="date || location"
@@ -544,6 +662,20 @@ const { target: rsvpTarget, visible: rsvpVisible } = useScrollReveal()
           <OrnamentFrame :color="t.accent" />
           <p v-if="date" class="break-words font-serif-display font-semibold" :style="{ fontSize: 'clamp(1.3rem, 4.5cqw, 1.9rem)' }">{{ date }}</p>
           <p v-if="location" class="mt-3 break-words font-serif-display italic opacity-70" :style="{ fontSize: 'clamp(0.95rem, 2.8cqw, 1.15rem)' }">{{ location }}</p>
+          <a
+            v-if="mapsUrl"
+            :href="mapsUrl"
+            target="_blank"
+            rel="noopener"
+            class="focus-ring mt-6 inline-flex items-center gap-2 rounded-full border px-5 py-2.5 font-serif-display text-sm transition hover:scale-105"
+            :style="{ borderColor: t.accent, color: t.accent }"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M12 21s-7-5.5-7-11a7 7 0 1114 0c0 5.5-7 11-7 11z" stroke="currentColor" stroke-width="1.6" />
+              <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+            Voir le plan d'acces
+          </a>
         </div>
       </section>
 
