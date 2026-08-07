@@ -82,7 +82,7 @@ const showcase = [
         Cartes et invitations en ligne
       </span>
       <p class="mx-auto mt-6 max-w-xl font-body text-lg leading-relaxed text-cream/70">
-        Sceau de cire, ornements dessines a la main, programme qui se devoile en scrollant. Chaque carte est un mini-site que vous partagez en un lien.
+       Chaque carte est un mini-site que vous partagez en un lien.
       </p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <NuxtLink

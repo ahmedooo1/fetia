@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 type Accent =
   | 'sunset' | 'candy' | 'gold' | 'sage' | 'sky' | 'neon'
   | 'blush' | 'terracotta' | 'champagne' | 'pearl' | 'navy' | 'burgundy'
@@ -476,6 +477,26 @@ function open() {
   if (opened.value || opening.value) return
   opening.value = true
   if (variant.value === 'burst') confettiRef.value?.burst()
+  // attempt to start music immediately (user gesture)
+  if (props.musicUrl) {
+    if (isYouTube.value) {
+      createYouTubePlayer().then(() => {
+        try {
+          youtubePlayer.value.playVideo()
+          musicPlaying.value = true
+        } catch {}
+      }).catch(() => {})
+    } else {
+      try {
+        const t = new Audio(props.musicUrl)
+        t.loop = true
+        t.play().then(() => {
+          tempAudioRef.value = t
+          musicPlaying.value = true
+        }).catch(() => {})
+      } catch {}
+    }
+  }
   window.setTimeout(() => {
     opened.value = true
     opening.value = false
@@ -501,6 +522,17 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   if (countdownTimer) clearInterval(countdownTimer)
+  // clean up youtube player if any
+  try {
+    destroyYouTubePlayer()
+  } catch {}
+  if (tempAudioRef.value) {
+    try {
+      tempAudioRef.value.pause()
+      tempAudioRef.value.src = ''
+    } catch {}
+    tempAudioRef.value = null
+  }
 })
 const countdown = computed(() => {
   if (!props.eventAt) return null
@@ -526,8 +558,132 @@ const mapsUrl = computed(() =>
 
 // ---- MUSIQUE ----
 const audioRef = ref<HTMLAudioElement | null>(null)
+const tempAudioRef = ref<HTMLAudioElement | null>(null)
+const youtubeContainerRef = ref<HTMLElement | null>(null)
+const youtubeTempContainerRef = ref<HTMLElement | null>(null)
+const youtubePlayer = ref<any>(null)
 const musicPlaying = ref(false)
+
+const isYouTube = computed(() => {
+  if (!props.musicUrl) return false
+  return /youtube\.com|youtu\.be/.test(props.musicUrl)
+})
+
+function extractYouTubeId(url: string) {
+  try {
+    const u = new URL(url)
+    // youtu.be short link
+    if (u.hostname.includes('youtu.be')) return u.pathname.slice(1)
+    // youtube.com variants: /watch?v=..., /shorts/ID, /embed/ID
+    if (u.hostname.includes('youtube.com') || u.hostname.includes('www.youtube.com')) {
+      // /shorts/<id>
+      const shortMatch = u.pathname.match(/\/shorts\/([0-9A-Za-z_-]{11})/)
+      if (shortMatch) return shortMatch[1]
+      // /embed/<id>
+      const embedMatch = u.pathname.match(/\/embed\/([0-9A-Za-z_-]{11})/)
+      if (embedMatch) return embedMatch[1]
+      // standard watch?v=
+      const v = u.searchParams.get('v')
+      if (v) return v
+    }
+  } catch {
+    // fallback regex
+    const m = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)
+    return m ? m[1] : null
+  }
+  return null
+}
+
+function loadYouTubeAPI(): Promise<void> {
+  return new Promise((resolve) => {
+    if ((window as any).YT && (window as any).YT.Player) return resolve()
+    const existing = document.querySelector('script[src="https://www.youtube.com/iframe_api"]')
+    if (existing) {
+      ;(window as any).onYouTubeIframeAPIReady = () => resolve()
+      return
+    }
+    const s = document.createElement('script')
+    s.src = 'https://www.youtube.com/iframe_api'
+    document.head.appendChild(s)
+    ;(window as any).onYouTubeIframeAPIReady = () => resolve()
+  })
+}
+
+async function createYouTubePlayer() {
+  if (!props.musicUrl) return
+  const id = extractYouTubeId(props.musicUrl)
+  if (!id) return
+  // decide target container: prefer component ref, else create a temporary hidden div
+  let target: HTMLElement | null = youtubeContainerRef.value
+  if (!target) {
+    if (!youtubeTempContainerRef.value) {
+      const d = document.createElement('div')
+      d.style.position = 'absolute'
+      d.style.left = '-9999px'
+      d.style.width = '1px'
+      d.style.height = '1px'
+      d.setAttribute('aria-hidden', 'true')
+      document.body.appendChild(d)
+      youtubeTempContainerRef.value = d
+    }
+    target = youtubeTempContainerRef.value
+  }
+  await loadYouTubeAPI()
+  if ((window as any).YT && (window as any).YT.Player) {
+    youtubePlayer.value = new (window as any).YT.Player(target, {
+      videoId: id,
+      playerVars: { autoplay: 0, controls: 0, rel: 0, modestbranding: 1, disablekb: 1, playsinline: 1 },
+      events: {
+        onStateChange: (e: any) => {
+          // 1 = playing, 2 = paused, 0 = ended
+          musicPlaying.value = e.data === 1
+        },
+      },
+    })
+  }
+}
+
+function destroyYouTubePlayer() {
+  if (youtubePlayer.value && youtubePlayer.value.destroy) {
+    youtubePlayer.value.destroy()
+    youtubePlayer.value = null
+  }
+  if (youtubeTempContainerRef.value) {
+    try {
+      youtubeTempContainerRef.value.remove()
+    } catch {}
+    youtubeTempContainerRef.value = null
+  }
+}
+
 function toggleMusic() {
+  if (isYouTube.value) {
+    if (!youtubePlayer.value) {
+      // create player and autoplay when ready
+      createYouTubePlayer().then(() => {
+        try {
+          youtubePlayer.value.playVideo()
+          musicPlaying.value = true
+        } catch {
+          /* ignore */
+        }
+      })
+      return
+    }
+    try {
+      if (musicPlaying.value) {
+        youtubePlayer.value.pauseVideo()
+        musicPlaying.value = false
+      } else {
+        youtubePlayer.value.playVideo()
+        musicPlaying.value = true
+      }
+    } catch {
+      /* ignore */
+    }
+    return
+  }
+
   const el = audioRef.value
   if (!el) return
   if (musicPlaying.value) {
@@ -547,6 +703,57 @@ const { target: rsvpTarget, visible: rsvpVisible } = useScrollReveal()
 const { target: countdownTarget, visible: countdownVisible } = useScrollReveal()
 
 defineExpose({ open, opened })
+
+// Transfer temporary audio playback to the DOM audio element once opened
+watch(
+  opened,
+  async (val) => {
+    if (!val) return
+    await nextTick()
+    try {
+      // transfer temporary audio to DOM audio element if present
+      if (tempAudioRef.value && audioRef.value instanceof HTMLAudioElement) {
+        const temp = tempAudioRef.value
+        const dom = audioRef.value
+        try {
+          dom.currentTime = temp.currentTime || 0
+        } catch {}
+        dom.play().then(() => {
+          musicPlaying.value = true
+        }).catch(() => {})
+        try {
+          temp.pause()
+          temp.src = ''
+        } catch {}
+        tempAudioRef.value = null
+        return
+      }
+
+      // if musicUrl provided, ensure playback starts when opened
+      if (props.musicUrl && !musicPlaying.value) {
+        if (isYouTube.value) {
+          try {
+            if (!youtubePlayer.value) {
+              await createYouTubePlayer()
+            }
+            if (youtubePlayer.value && youtubePlayer.value.playVideo) {
+              youtubePlayer.value.playVideo()
+              musicPlaying.value = true
+            }
+          } catch {}
+        } else {
+          try {
+            if (audioRef.value instanceof HTMLAudioElement) {
+              await audioRef.value.play()
+              musicPlaying.value = true
+            }
+          } catch {}
+        }
+      }
+    } catch {}
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -786,7 +993,14 @@ defineExpose({ open, opened })
 
       <!-- musique de fond -->
       <template v-if="musicUrl && opened">
-        <audio ref="audioRef" :src="musicUrl" loop preload="none" />
+        <div
+          v-if="isYouTube"
+          ref="youtubeContainerRef"
+          class="pointer-events-none"
+          style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;"
+          aria-hidden="true"
+        />
+        <audio v-else ref="audioRef" :src="musicUrl" loop preload="none" />
         <button
           type="button"
           class="focus-ring absolute right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-full shadow-lg backdrop-blur transition hover:scale-110"
