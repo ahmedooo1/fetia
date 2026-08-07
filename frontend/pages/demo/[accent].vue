@@ -23,7 +23,7 @@ const demos: Record<string, any> = {
     accent: 'sage',
     title: 'Lea & Mehdi',
     subtitle: 'se disent oui',
-    message: 'Entourés de ceux qu'ils aiment, sous les arbres du domaine.',
+    message: "Entourés de ceux qu'ils aiment, sous les arbres du domaine.",
     date: 'Samedi 5 septembre 2026',
     location: 'La Grange aux Saules, Elbeuf',
     timeline: [
