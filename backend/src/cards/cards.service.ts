@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,16 +10,20 @@ import { nanoid } from 'nanoid';
 import { Card } from './card.entity';
 import { Rsvp } from './rsvp.entity';
 import { TemplatesService } from '../templates/templates.service';
+import { MailService, emailButton, escapeHtml, renderEmail } from '../mail/mail.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { CreateRsvpDto } from './dto/create-rsvp.dto';
 
 @Injectable()
 export class CardsService {
+  private readonly logger = new Logger(CardsService.name);
+
   constructor(
     @InjectRepository(Card) private readonly cardsRepo: Repository<Card>,
     @InjectRepository(Rsvp) private readonly rsvpsRepo: Repository<Rsvp>,
     private readonly templatesService: TemplatesService,
+    private readonly mailService: MailService,
   ) {}
 
   async create(ownerId: string, dto: CreateCardDto) {
@@ -90,7 +95,7 @@ export class CardsService {
 
   // ---- RSVP ----
   async createRsvp(slug: string, dto: CreateRsvpDto) {
-    const card = await this.cardsRepo.findOne({ where: { slug } });
+    const card = await this.cardsRepo.findOne({ where: { slug }, relations: ['owner'] });
     if (!card) throw new NotFoundException('Carte introuvable');
     if (!card.isUnlocked || !card.rsvpEnabled) {
       throw new ForbiddenException('Les reponses ne sont pas ouvertes pour cette carte');
@@ -103,7 +108,39 @@ export class CardsService {
       message: dto.message,
     });
     await this.rsvpsRepo.save(rsvp);
+    this.notifyOwnerOfRsvp(card, rsvp).catch(() => undefined); // best-effort, ne bloque pas la reponse a l'invite
     return { ok: true };
+  }
+
+  private async notifyOwnerOfRsvp(card: Card, rsvp: Rsvp) {
+    if (!this.mailService.isConfigured() || !card.owner?.email) return;
+
+    const cardTitle = (card.data as any)?.title || card.template?.name || 'ta carte';
+    const rsvpsUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/cards/${card.id}/rsvps`;
+
+    const body = `
+      <p style="margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#C98A4B;">Nouvelle reponse</p>
+      <h1 style="margin:0 0 16px;font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:700;color:#1B0E2E;">${escapeHtml(rsvp.name)} a repondu</h1>
+      <p style="margin:0 0 4px;color:#3A3226;">
+        ${rsvp.attending
+          ? `Sera present${rsvp.guests > 1 ? ` (${rsvp.guests} personnes)` : ''}.`
+          : 'Ne pourra pas venir.'}
+      </p>
+      <p style="margin:0 0 16px;color:#3A3226;">Pour ta carte <strong>${escapeHtml(cardTitle)}</strong>.</p>
+      ${rsvp.message ? `<div style="padding:16px 18px;background:#FAF7F1;border-radius:12px;border:1px solid #EAE3D6;color:#3A3226;font-size:14px;line-height:1.6;margin-bottom:16px;">${escapeHtml(rsvp.message).replace(/\n/g, '<br>')}</div>` : ''}
+      ${emailButton(escapeHtml(rsvpsUrl), 'Voir toutes les reponses')}
+    `;
+
+    try {
+      await this.mailService.send({
+        to: card.owner.email,
+        subject: `${rsvp.name} a repondu a ton invitation`,
+        text: `${rsvp.name} ${rsvp.attending ? 'sera present' : 'ne pourra pas venir'}${rsvp.message ? `\n\nMessage : ${rsvp.message}` : ''}\n\nVoir toutes les reponses : ${rsvpsUrl}`,
+        html: renderEmail(body),
+      });
+    } catch (err) {
+      this.logger.error('Echec envoi notification RSVP', err as Error);
+    }
   }
 
   async listRsvps(cardId: string, ownerId: string) {

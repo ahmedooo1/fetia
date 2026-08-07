@@ -418,10 +418,16 @@ const rsvpChoice = ref<null | boolean>(null)
 const rsvpSending = ref(false)
 const rsvpDone = ref(false)
 const rsvpError = ref('')
+const rsvpChoiceMissing = ref(false)
 
 async function sendRsvp() {
-  if (!props.rsvpSlug || rsvpChoice.value === null || !rsvpName.value.trim()) {
-    rsvpError.value = 'Indique ton nom et ta reponse.'
+  if (rsvpChoice.value === null) {
+    rsvpChoiceMissing.value = true
+    rsvpError.value = 'Merci de preciser si vous serez present avant d\'envoyer.'
+    return
+  }
+  if (!rsvpName.value.trim()) {
+    rsvpError.value = 'Merci d\'indiquer votre nom avant d\'envoyer.'
     return
   }
   rsvpSending.value = true
@@ -902,7 +908,17 @@ defineExpose({ open, opened })
           </div>
 
           <div v-else class="space-y-5">
-            <div class="flex justify-center gap-3">
+            <p
+              class="text-center text-sm italic opacity-80"
+              :class="bodyFontClass"
+            >
+              Serez-vous present ?
+            </p>
+            <div
+              class="flex justify-center gap-3 rounded-2xl transition"
+              :class="rsvpChoiceMissing ? 'animate-pulse ring-2 ring-offset-2' : ''"
+              :style="rsvpChoiceMissing ? { '--tw-ring-color': '#E14D4D', '--tw-ring-offset-color': t.bgSoft } : {}"
+            >
               <button
                 type="button"
                 class="focus-ring rounded-full border px-6 py-2.5 text-base transition"
@@ -910,7 +926,7 @@ defineExpose({ open, opened })
                 :style="rsvpChoice === true
                   ? { background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7', borderColor: t.accent }
                   : { borderColor: t.accent, color: 'inherit', opacity: 0.8 }"
-                @click="rsvpChoice = true"
+                @click="rsvpChoice = true; rsvpChoiceMissing = false"
               >
                 Je serai la
               </button>
@@ -921,7 +937,7 @@ defineExpose({ open, opened })
                 :style="rsvpChoice === false
                   ? { background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7', borderColor: t.accent }
                   : { borderColor: t.accent, color: 'inherit', opacity: 0.8 }"
-                @click="rsvpChoice = false"
+                @click="rsvpChoice = false; rsvpChoiceMissing = false"
               >
                 Je ne peux pas
               </button>
@@ -958,7 +974,18 @@ defineExpose({ open, opened })
               :style="{ borderColor: t.accentSoft }"
             />
 
-            <p v-if="rsvpError" class="text-center font-body text-xs" :style="{ color: t.accent }">{{ rsvpError }}</p>
+            <p
+              v-if="rsvpError"
+              class="flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-center font-body text-sm font-semibold"
+              style="background: rgba(225, 77, 77, 0.1); border-color: #E14D4D; color: #E14D4D;"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="shrink-0">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
+                <path d="M12 8v5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <circle cx="12" cy="16" r="1" fill="currentColor" />
+              </svg>
+              {{ rsvpError }}
+            </p>
 
             <button
               type="button"
