@@ -17,14 +17,14 @@ function goHome() {
     <p class="max-w-sm font-body text-sm text-cream/60">
       {{ props.error.statusCode === 404
         ? "Cette page n'existe pas ou plus."
-        : "Quelque chose s'est mal passe, reessaie dans quelques instants." }}
+        : "Quelque chose s'est mal passé, réessaie dans quelques instants." }}
     </p>
     <button
       type="button"
       class="focus-ring mt-2 rounded-full bg-gradient-to-r from-coral to-gold px-6 py-3 font-display font-bold text-ink shadow-lg shadow-coral/20 transition hover:scale-105"
       @click="goHome"
     >
-      Retour a l'accueil
+      Retour à l'accueil
     </button>
   </div>
 </template>

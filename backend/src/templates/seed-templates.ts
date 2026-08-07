@@ -21,11 +21,11 @@ const templates = [
     priceCents: 0,
     defaultData: {
       title: 'Joyeux anniversaire',
-      subtitle: 'On celebre {prenom} !',
-      message: "Une nouvelle annee pleine de belles surprises t'attend.",
+      subtitle: 'On célèbre {prenom} !',
+      message: "Une nouvelle année pleine de belles surprises t'attend.",
       accent: 'sunset',
       date: 'Samedi 19 septembre, 19h',
-      location: 'Chez nous, tu connais l adresse',
+      location: "Chez nous, tu connais l'adresse",
       closing: 'Avec tout notre amour',
     },
   },
@@ -36,13 +36,13 @@ const templates = [
     isPremium: false,
     priceCents: 0,
     defaultData: {
-      title: "C'est la fete !",
+      title: "C'est la fête !",
       subtitle: 'Rejoins-nous',
-      message: 'Une soiree que tu ne vas pas oublier.',
+      message: 'Une soirée que tu ne vas pas oublier.',
       accent: 'candy',
       date: 'Vendredi 3 juillet, 21h',
       location: 'Le Rooftop, Rouen',
-      closing: 'Amene ta bonne humeur',
+      closing: 'Amène ta bonne humeur',
     },
   },
   {
@@ -52,19 +52,19 @@ const templates = [
     isPremium: false,
     priceCents: 299,
     defaultData: {
-      title: 'Vous etes invites',
+      title: 'Vous êtes invités',
       subtitle: '{evenement}',
-      message: 'Votre presence sera notre plus beau cadeau.',
+      message: 'Votre présence sera notre plus beau cadeau.',
       accent: 'gold',
       date: '14 juin 2026',
-      location: 'Salle des Fetes, Elbeuf',
+      location: 'Salle des Fêtes, Elbeuf',
       timeline: [
-        { time: '18:00', label: 'Accueil des invites' },
+        { time: '18:00', label: 'Accueil des invités' },
         { time: '19:00', label: 'Discours et toast' },
         { time: '20:00', label: 'Diner' },
-        { time: '22:00', label: 'Soiree dansante' },
+        { time: '22:00', label: 'Soirée dansante' },
       ],
-      closing: 'On a hate de vous voir',
+      closing: 'On a hâte de vous voir',
     },
   },
   {
@@ -76,7 +76,7 @@ const templates = [
     defaultData: {
       title: '{prenom1} & {prenom2}',
       subtitle: 'se disent oui',
-      message: 'Venez celebrer avec nous ce jour unique.',
+      message: 'Venez célébrer avec nous ce jour unique.',
       accent: 'sage',
       date: '14 juin 2026',
       location: 'Domaine des Cerisiers, Rouen',
@@ -97,12 +97,12 @@ const templates = [
     priceCents: 0,
     defaultData: {
       title: 'Bienvenue {prenom}',
-      subtitle: 'Ne le {date}',
-      message: 'Un petit coeur de plus a aimer.',
+      subtitle: 'Né le {date}',
+      message: 'Un petit cœur de plus à aimer.',
       accent: 'sky',
-      date: '2 aout 2026, 3.2 kg',
-      location: 'Maternite de Rouen',
-      closing: 'Maman, papa et bebe se portent bien',
+      date: '2 août 2026, 3.2 kg',
+      location: 'Maternité de Rouen',
+      closing: 'Maman, papa et bébé se portent bien',
     },
   },
   {
@@ -113,8 +113,8 @@ const templates = [
     priceCents: 399,
     defaultData: {
       title: 'Neon Nights',
-      subtitle: 'Dress code: ca brille',
-      message: 'DJ set, cocktails et surprises jusqu au bout de la nuit.',
+      subtitle: 'Dress code : ça brille',
+      message: 'DJ set, cocktails et surprises jusqu’au bout de la nuit.',
       accent: 'neon',
       date: 'Samedi 25 juillet, 23h',
       location: 'Warehouse 12, Rouen',
@@ -136,8 +136,8 @@ const templates = [
     priceCents: 499,
     defaultData: {
       title: '{prenom1} & {prenom2}',
-      subtitle: 'vous invitent a leur mariage',
-      message: 'Un jour, une promesse, et vous a nos cotes.',
+      subtitle: 'vous invitent à leur mariage',
+      message: 'Un jour, une promesse, et vous à nos côtés.',
       accent: 'blush',
       date: '20 juin 2026',
       location: 'Chateau de Miromesnil',
@@ -162,7 +162,7 @@ const templates = [
       accent: 'terracotta',
       date: '11 juillet 2026',
       location: 'Mas des Oliviers, Provence',
-      closing: 'On vous attend la-bas',
+      closing: 'On vous attend là-bas',
     },
   },
   {
@@ -174,11 +174,11 @@ const templates = [
     defaultData: {
       title: 'On se fiance !',
       subtitle: '{prenom1} & {prenom2}',
-      message: 'Venez lever un verre a notre nouvelle aventure.',
+      message: 'Venez lever un verre à notre nouvelle aventure.',
       accent: 'champagne',
       date: 'Samedi 12 septembre, 18h',
       location: 'Rooftop Le Perchoir',
-      closing: 'Sante !',
+      closing: 'Santé !',
     },
   },
   {
@@ -204,9 +204,9 @@ const templates = [
     isPremium: false,
     priceCents: 399,
     defaultData: {
-      title: 'Soiree de gala',
+      title: 'Soirée de gala',
       subtitle: '{evenement}',
-      message: 'Tenue de soiree exigee. Champagne offert.',
+      message: 'Tenue de soirée exigée. Champagne offert.',
       accent: 'navy',
       date: 'Vendredi 21 novembre, 20h',
       location: 'Hotel de Bourgtheroulde, Rouen',
@@ -258,7 +258,7 @@ const templates = [
     defaultData: {
       title: 'Joyeux anniversaire',
       subtitle: 'a la plus douce',
-      message: 'Une annee de plus, une raison de plus de te celebrer.',
+      message: 'Une année de plus, une raison de plus de te célébrer.',
       accent: 'lavender',
       date: 'Dimanche 26 avril, gouter a 16h',
       location: 'Jardin de la maison',
@@ -272,15 +272,15 @@ const templates = [
     isPremium: false,
     priceCents: 399,
     defaultData: {
-      title: '30 ans, rien que ca',
+      title: '30 ans, rien que ça',
       subtitle: 'et on va le faire savoir',
-      message: 'Dress code noir et or. Pas de cadeau, juste ta presence (et ta playlist).',
+      message: 'Dress code noir et or. Pas de cadeau, juste ta présence (et ta playlist).',
       accent: 'noir',
       date: 'Samedi 17 octobre, 20h',
       location: 'Le Loft, Rouen',
       timeline: [
         { time: '20h00', label: 'Cocktails signature' },
-        { time: '22h00', label: 'Gateau et toasts' },
+        { time: '22h00', label: 'Gâteau et toasts' },
         { time: '23h00', label: 'Dancefloor' },
       ],
       closing: 'RSVP obligatoire, places limitees',
@@ -372,7 +372,7 @@ const templates = [
     priceCents: 299,
     defaultData: {
       title: 'Minuit pile',
-      subtitle: 'soiree du Nouvel An',
+      subtitle: 'soirée du Nouvel An',
       message: 'Douze coups, des bulles et la meilleure playlist de la ville.',
       accent: 'midnight',
       date: '31 decembre, 22h',
@@ -395,7 +395,7 @@ async function run() {
     const existing = await repo.findOne({ where: { designKey: t.designKey } });
     if (!existing) {
       await repo.save(repo.create(t));
-      console.log(`Cree: ${t.name}`);
+      console.log(`Créé : ${t.name}`);
     } else {
       await repo.save({ ...existing, ...t, id: existing.id });
       console.log(`Mis a jour: ${t.name}`);

@@ -73,7 +73,7 @@ async function onPhotoSelected(e: Event) {
     })
     form.photoUrl = res.url
   } catch (err) {
-    errorMsg.value = "L'upload de la photo a echoue (jpg, png ou webp, 20 Mo max)."
+    errorMsg.value = "L'upload de la photo a échoué (jpg, png ou webp, 20 Mo max)."
   } finally {
     uploadingPhoto.value = false
     input.value = ''
@@ -161,7 +161,7 @@ async function saveCard() {
     }
     router.push(`/c/${card.slug}`)
   } catch (e) {
-    errorMsg.value = "L'enregistrement a echoue. Reessaie dans un instant."
+    errorMsg.value = "L'enregistrement a échoué. Réessaie dans un instant."
   } finally {
     saving.value = false
   }
@@ -177,7 +177,7 @@ async function saveCard() {
     <div v-else class="grid gap-12 md:grid-cols-2">
       <div>
         <h1 class="font-display text-3xl font-bold text-cream">{{ editingCardId ? 'Modifie ta carte' : 'Personnalise ta carte' }}</h1>
-        <p class="mt-2 font-body text-sm text-cream/60">Modele &laquo; {{ template.name }} &raquo;</p>
+        <p class="mt-2 font-body text-sm text-cream/60">Modèle &laquo; {{ template.name }} &raquo;</p>
 
         <div class="mt-8 space-y-5">
           <div>
@@ -195,7 +195,7 @@ async function saveCard() {
               v-model="form.subtitle"
               type="text"
               class="focus-ring w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-body text-cream placeholder:text-cream/30"
-              placeholder="On celebre Lina !"
+              placeholder="On célèbre Lina !"
             />
           </div>
           <div>
@@ -224,7 +224,7 @@ async function saveCard() {
                 v-model="form.location"
                 type="text"
                 class="focus-ring w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-body text-cream placeholder:text-cream/30"
-                placeholder="Salle des fetes, Elbeuf"
+                placeholder="Salle des fêtes, Elbeuf"
               />
             </div>
           </div>
@@ -280,7 +280,7 @@ async function saveCard() {
           <div class="rounded-xl border border-white/10 bg-white/5 p-4">
             <label class="flex items-center gap-2 font-body text-sm font-medium text-cream/80">
               <input v-model="showTimeline" type="checkbox" class="accent-gold" />
-              Ajouter un programme (deroule de la journee)
+              Ajouter un programme (déroulé de la journée)
             </label>
 
             <div v-if="showTimeline" class="mt-4 space-y-3">
@@ -302,7 +302,7 @@ async function saveCard() {
                 </button>
               </div>
               <button type="button" class="focus-ring font-body text-xs font-medium text-gold underline" @click="addTimelineStep">
-                + Ajouter une etape
+                + Ajouter une étape
               </button>
             </div>
           </div>
@@ -315,7 +315,7 @@ async function saveCard() {
           :disabled="saving"
           @click="saveCard"
         >
-          {{ saving ? 'Un instant...' : editingCardId ? 'Enregistrer les modifications' : template.isPremium ? `Debloquer pour ${(template.priceCents / 100).toFixed(2)} €` : 'Obtenir mon lien' }}
+          {{ saving ? 'Un instant...' : editingCardId ? 'Enregistrer les modifications' : template.isPremium ? `Débloquer pour ${(template.priceCents / 100).toFixed(2)} €` : 'Obtenir mon lien' }}
         </button>
       </div>
 
@@ -344,7 +344,7 @@ async function saveCard() {
             class="focus-ring rounded-full bg-white/5 px-4 py-2 font-body text-xs font-semibold text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10 disabled:opacity-60"
             @click="downloadImage(form.title)"
           >
-            {{ downloading ? 'Preparation...' : 'Telecharger l\'image' }}
+            {{ downloading ? 'Préparation...' : 'Télécharger l\'image' }}
           </button>
         </div>
         <p v-if="downloadError" class="mt-2 text-center font-body text-xs text-coral">{{ downloadError }}</p>

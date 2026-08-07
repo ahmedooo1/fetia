@@ -7,8 +7,8 @@ const demos: Record<string, any> = {
   gold: {
     accent: 'gold',
     title: 'Nora & Adam',
-    subtitle: 'ont la joie de vous convier a leur mariage',
-    message: 'Votre presence sera notre plus beau cadeau.',
+    subtitle: 'ont la joie de vous convier à leur mariage',
+    message: 'Votre présence sera notre plus beau cadeau.',
     date: 'Samedi 14 juin 2026',
     location: 'Domaine des Cerisiers, Rouen',
     timeline: [
@@ -23,13 +23,13 @@ const demos: Record<string, any> = {
     accent: 'sage',
     title: 'Lea & Mehdi',
     subtitle: 'se disent oui',
-    message: 'Entoures de ceux qu ils aiment, sous les arbres du domaine.',
+    message: 'Entourés de ceux qu'ils aiment, sous les arbres du domaine.',
     date: 'Samedi 5 septembre 2026',
     location: 'La Grange aux Saules, Elbeuf',
     timeline: [
-      { time: '15h30', label: 'Ceremonie laique' },
-      { time: '17h00', label: 'Vin d honneur' },
-      { time: '19h30', label: 'Repas champetre' },
+      { time: '15h30', label: 'Cérémonie laïque' },
+      { time: '17h00', label: 'Vin d'honneur' },
+      { time: '19h30', label: 'Repas champêtre' },
       { time: '23h00', label: 'Feu de camp et guimauves' },
     ],
     closing: 'On vous attend',
@@ -37,22 +37,22 @@ const demos: Record<string, any> = {
   sky: {
     accent: 'sky',
     title: 'Bienvenue Nour',
-    subtitle: 'notre petite etoile',
-    message: 'Nee le 2 aout 2026 a 4h12, 3,2 kg de bonheur.',
-    date: '2 aout 2026',
-    location: 'Maternite de Rouen',
-    closing: 'Maman, papa et Nour se portent a merveille',
+    subtitle: 'notre petite étoile',
+    message: 'Née le 2 août 2026 à 4h12, 3,2 kg de bonheur.',
+    date: '2 août 2026',
+    location: 'Maternité de Rouen',
+    closing: 'Maman, papa et Nour se portent à merveille',
   },
   sunset: {
     accent: 'sunset',
     title: 'Lina a 25 ans',
-    subtitle: 'et ca se fete',
-    message: 'Un quart de siecle, ca merite mieux qu un simple message.',
+    subtitle: 'et ça se fête',
+    message: 'Un quart de siècle, ça mérite mieux qu'un simple message.',
     date: 'Samedi 19 septembre, 19h',
     location: 'Le Rooftop, Rouen',
     timeline: [
-      { time: '19h00', label: 'Apero au coucher du soleil' },
-      { time: '21h00', label: 'Gateau surprise' },
+      { time: '19h00', label: 'Apéro au coucher du soleil' },
+      { time: '21h00', label: 'Gâteau surprise' },
       { time: '22h00', label: 'Playlist de Lina, volume max' },
     ],
     closing: 'Ne sois pas en retard',
@@ -60,8 +60,8 @@ const demos: Record<string, any> = {
   neon: {
     accent: 'neon',
     title: 'Neon Nights',
-    subtitle: 'la soiree dont on parlera encore lundi',
-    message: 'Dress code : ca brille. DJ set, cocktails, surprises.',
+    subtitle: 'la soirée dont on parlera encore lundi',
+    message: 'Dress code : ça brille. DJ set, cocktails, surprises.',
     date: 'Samedi 25 juillet, 23h',
     location: 'Warehouse 12, Rouen',
     timeline: [
@@ -86,7 +86,7 @@ useHead({ title: `Fetia - Demo ${route.params.accent}` })
         to="/templates"
         class="rounded-full bg-night/85 px-6 py-3 font-body text-sm font-semibold text-cream shadow-2xl backdrop-blur transition hover:scale-105"
       >
-        Creer la mienne sur Fetia &rarr;
+        Créer la mienne sur Fetia &rarr;
       </NuxtLink>
     </div>
   </div>

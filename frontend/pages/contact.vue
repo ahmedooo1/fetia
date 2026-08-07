@@ -33,7 +33,7 @@ async function submit() {
     })
     done.value = true
   } catch (e) {
-    errorMsg.value = "L'envoi a echoue, reessaie dans quelques instants."
+    errorMsg.value = "L'envoi a échoué, réessaie dans quelques instants."
   } finally {
     sending.value = false
   }
@@ -43,11 +43,11 @@ async function submit() {
 <template>
   <main class="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-6 py-16">
     <h1 class="font-display text-3xl font-bold text-cream">Nous contacter</h1>
-    <p class="mt-2 font-body text-sm text-cream/60">Une question, une idee, un probleme ? Ecris-nous.</p>
+    <p class="mt-2 font-body text-sm text-cream/60">Une question, une idée, un problème ? Écris-nous.</p>
 
     <div v-if="done" class="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
-      <p class="font-display text-xl font-bold text-cream">Message envoye</p>
-      <p class="mt-2 font-body text-sm text-cream/60">On te repond au plus vite.</p>
+      <p class="font-display text-xl font-bold text-cream">Message envoyé</p>
+      <p class="mt-2 font-body text-sm text-cream/60">On te répond au plus vite.</p>
     </div>
 
     <form v-else class="mt-8 space-y-4" @submit.prevent="submit">

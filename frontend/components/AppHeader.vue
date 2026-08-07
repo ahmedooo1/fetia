@@ -19,7 +19,7 @@ function logout() {
         </NuxtLink>
 
         <nav class="hidden items-center gap-8 font-body text-sm text-cream/80 md:flex">
-          <NuxtLink to="/templates" class="transition hover:text-cream">Modeles</NuxtLink>
+          <NuxtLink to="/templates" class="transition hover:text-cream">Modèles</NuxtLink>
         </nav>
       </div>
 
@@ -36,13 +36,13 @@ function logout() {
             class="focus-ring rounded-full px-4 py-2 text-sm text-cream/60 transition hover:text-cream"
             @click="logout"
           >
-            Deconnexion
+            Déconnexion
           </button>
           <NuxtLink
             to="/templates"
             class="rounded-full bg-gradient-to-r from-coral to-gold px-5 py-2 text-sm font-semibold text-ink shadow-lg shadow-coral/20 transition hover:scale-105"
           >
-            Creer une carte
+            Créer une carte
           </NuxtLink>
         </template>
         <template v-else>
@@ -71,10 +71,10 @@ function logout() {
 
     <div v-if="mobileOpen" class="border-t border-white/5 px-6 py-4 md:hidden">
       <div class="flex flex-col gap-4 font-body text-cream/80">
-        <NuxtLink to="/templates" @click="mobileOpen = false">Modeles</NuxtLink>
+        <NuxtLink to="/templates" @click="mobileOpen = false">Modèles</NuxtLink>
         <template v-if="auth.user">
           <NuxtLink to="/dashboard" @click="mobileOpen = false">Mon espace</NuxtLink>
-          <button type="button" class="focus-ring text-left text-cream/60" @click="logout">Deconnexion</button>
+          <button type="button" class="focus-ring text-left text-cream/60" @click="logout">Déconnexion</button>
         </template>
         <NuxtLink v-else to="/login" @click="mobileOpen = false">Connexion</NuxtLink>
         <NuxtLink
@@ -82,7 +82,7 @@ function logout() {
           class="w-fit rounded-full bg-gradient-to-r from-coral to-gold px-5 py-2 text-sm font-semibold text-ink"
           @click="mobileOpen = false"
         >
-          Creer une carte
+          Créer une carte
         </NuxtLink>
       </div>
     </div>

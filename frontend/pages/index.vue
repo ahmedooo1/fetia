@@ -2,21 +2,21 @@
 const showcase = [
   {
     accent: 'gold',
-    label: 'Mariage elegant',
+    label: 'Mariage élégant',
     demo: '/demo/gold',
     props: {
       accent: 'gold',
       forceOpen: true,
       compact: true,
       title: 'Nora & Adam',
-      subtitle: 'ont la joie de vous convier a leur mariage',
+      subtitle: 'ont la joie de vous convier à leur mariage',
       date: 'Samedi 14 juin 2026',
       location: 'Domaine des Cerisiers, Rouen',
     },
   },
   {
     accent: 'sage',
-    label: 'Champetre',
+    label: 'Champêtre',
     demo: '/demo/sage',
     props: {
       accent: 'sage',
@@ -37,8 +37,8 @@ const showcase = [
       forceOpen: true,
       compact: true,
       title: 'Bienvenue Nour',
-      subtitle: 'notre petite etoile',
-      date: '2 aout 2026',
+      subtitle: 'notre petite étoile',
+      date: '2 août 2026',
     },
   },
   {
@@ -50,20 +50,20 @@ const showcase = [
       forceOpen: true,
       compact: true,
       title: 'Lina a 25 ans',
-      subtitle: 'et ca se fete',
+      subtitle: 'et ça se fête',
       date: 'Samedi 19 septembre, 19h',
     },
   },
   {
     accent: 'neon',
-    label: 'Soiree',
+    label: 'Soirée',
     demo: '/demo/neon',
     props: {
       accent: 'neon',
       forceOpen: true,
       compact: true,
       title: 'Neon Nights',
-      subtitle: 'la soiree dont on parlera encore lundi',
+      subtitle: 'la soirée dont on parlera encore lundi',
       date: 'Samedi 25 juillet, 23h',
     },
   },
@@ -89,10 +89,10 @@ const showcase = [
           to="/templates"
           class="rounded-full bg-gradient-to-r from-coral to-gold px-7 py-3.5 font-display text-base font-bold text-ink shadow-xl shadow-coral/20 transition hover:scale-105"
         >
-          Creer ma carte
+          Créer ma carte
         </NuxtLink>
         <NuxtLink to="/demo/gold" class="font-body text-sm font-medium text-cream/70 underline-offset-4 hover:text-cream hover:underline">
-          Voir une demo en plein ecran &rarr;
+          Voir une démo en plein écran &rarr;
         </NuxtLink>
       </div>
     </section>
@@ -103,8 +103,8 @@ const showcase = [
         <MagicExperience
           accent="gold"
           title="Nora & Adam"
-          subtitle="ont la joie de vous convier a leur mariage"
-          message="Votre presence sera notre plus beau cadeau."
+          subtitle="ont la joie de vous convier à leur mariage"
+          message="Votre présence sera notre plus beau cadeau."
           date="Samedi 14 juin 2026"
           location="Domaine des Cerisiers, Rouen"
           :timeline="[
@@ -118,15 +118,15 @@ const showcase = [
         />
       </div>
       <p class="mt-4 text-center font-body text-xs text-cream/40">
-        Demo interactive - touchez le sceau, puis faites defiler a l'interieur de la carte
+        Démo interactive - touchez le sceau, puis faites défiler à l'intérieur de la carte
       </p>
     </section>
 
     <!-- GALERIE DES 5 AMBIANCES : cartes ouvertes, pleine largeur en alternance -->
     <section class="mx-auto max-w-6xl px-6 pb-10">
-      <h2 class="mb-3 text-center font-display text-3xl font-bold text-cream md:text-4xl">Cinq ambiances, cinq emotions</h2>
+      <h2 class="mb-3 text-center font-display text-3xl font-bold text-cream md:text-4xl">Cinq ambiances, cinq émotions</h2>
       <p class="mx-auto mb-12 max-w-lg text-center font-body text-cream/60">
-        Chaque ambiance a ses ornements, sa typographie et sa propre facon de s'ouvrir. Cliquez pour la vivre en plein ecran.
+        Chaque ambiance a ses ornements, sa typographie et sa propre façon de s'ouvrir. Cliquez pour la vivre en plein écran.
       </p>
 
       <div class="grid gap-8 md:grid-cols-2">
@@ -143,7 +143,7 @@ const showcase = [
           <div class="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/60 to-transparent p-5">
             <span class="font-display text-lg font-bold text-white drop-shadow">{{ item.label }}</span>
             <span class="rounded-full bg-white/15 px-4 py-1.5 font-body text-xs font-semibold text-white backdrop-blur transition group-hover:bg-white/25">
-              Voir en plein ecran &rarr;
+              Voir en plein écran &rarr;
             </span>
           </div>
         </NuxtLink>
@@ -152,15 +152,15 @@ const showcase = [
 
     <!-- CTA FINAL -->
     <section class="mx-auto max-w-4xl px-6 py-24 text-center">
-      <h2 class="font-display text-3xl font-bold text-cream md:text-4xl">Votre evenement merite mieux qu'un message</h2>
+      <h2 class="font-display text-3xl font-bold text-cream md:text-4xl">Votre événement mérite mieux qu'un message</h2>
       <p class="mx-auto mt-4 font-body text-cream/60">
-        Modeles gratuits disponibles tout de suite, sans carte bancaire.
+        Modèles gratuits disponibles tout de suite, sans carte bancaire.
       </p>
       <NuxtLink
         to="/templates"
         class="mt-8 inline-block rounded-full bg-gradient-to-r from-coral to-gold px-8 py-4 font-display font-bold text-ink shadow-xl shadow-coral/20 transition hover:scale-105"
       >
-        Creer ma carte
+        Créer ma carte
       </NuxtLink>
     </section>
   </main>

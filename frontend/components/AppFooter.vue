@@ -5,9 +5,9 @@
       <p>Fait avec soin pour les moments qui comptent.</p>
       <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
         <NuxtLink to="/contact" class="transition hover:text-cream">Nous contacter</NuxtLink>
-        <NuxtLink to="/mentions-legales" class="transition hover:text-cream">Mentions legales</NuxtLink>
+        <NuxtLink to="/mentions-legales" class="transition hover:text-cream">Mentions légales</NuxtLink>
         <NuxtLink to="/cgu" class="transition hover:text-cream">CGU</NuxtLink>
-        <NuxtLink to="/confidentialite" class="transition hover:text-cream">Confidentialite</NuxtLink>
+        <NuxtLink to="/confidentialite" class="transition hover:text-cream">Confidentialité</NuxtLink>
       </nav>
       <p>&copy; {{ new Date().getFullYear() }} Fetia</p>
     </div>

@@ -9,8 +9,8 @@ const route = useRoute()
         <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </div>
-    <h1 class="font-display text-3xl font-bold text-cream">Paiement confirme</h1>
-    <p class="mt-2 font-body text-cream/60">Ta carte est debloquee et prete a etre partagee.</p>
+    <h1 class="font-display text-3xl font-bold text-cream">Paiement confirmé</h1>
+    <p class="mt-2 font-body text-cream/60">Ta carte est débloquée et prête à être partagée.</p>
     <NuxtLink
       v-if="route.query.slug"
       :to="`/c/${route.query.slug}`"
@@ -18,6 +18,6 @@ const route = useRoute()
     >
       Voir ma carte
     </NuxtLink>
-    <NuxtLink to="/dashboard" class="mt-4 font-body text-sm text-cream/50 underline">Aller a mon espace</NuxtLink>
+    <NuxtLink to="/dashboard" class="mt-4 font-body text-sm text-cream/50 underline">Aller à mon espace</NuxtLink>
   </main>
 </template>

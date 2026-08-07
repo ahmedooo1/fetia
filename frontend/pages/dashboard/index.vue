@@ -85,8 +85,8 @@ async function removeCard(c: Card) {
     <div v-if="loading" class="font-body text-cream/60">Chargement...</div>
 
     <div v-else-if="!cards.length" class="rounded-3xl border border-white/10 bg-white/5 p-12 text-center">
-      <p class="font-body text-cream/60">Tu n'as pas encore cree de carte.</p>
-      <NuxtLink to="/templates" class="mt-3 inline-block font-body text-sm text-gold underline">Parcourir les modeles</NuxtLink>
+      <p class="font-body text-cream/60">Tu n'as pas encore créé de carte.</p>
+      <NuxtLink to="/templates" class="mt-3 inline-block font-body text-sm text-gold underline">Parcourir les modèles</NuxtLink>
     </div>
 
     <div v-else class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -108,7 +108,7 @@ async function removeCard(c: Card) {
               <rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6" />
               <path d="M8 10V7a4 4 0 118 0v3" stroke="currentColor" stroke-width="1.6" />
             </svg>
-            <p class="font-body text-sm font-medium text-cream/90">A debloquer</p>
+            <p class="font-body text-sm font-medium text-cream/90">À débloquer</p>
           </div>
           <span class="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-ink/75 px-3 py-1 font-body text-[11px] font-medium text-cream/90 backdrop-blur">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -123,7 +123,7 @@ async function removeCard(c: Card) {
 
         <div v-if="c.isUnlocked" class="mt-3 grid grid-cols-2 gap-2">
           <button class="focus-ring rounded-xl bg-white/5 px-3 py-2 font-body text-xs text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10" @click="copyLink(c)">
-            {{ copiedId === c.id ? 'Copie !' : 'Copier le lien' }}
+            {{ copiedId === c.id ? 'Copié !' : 'Copier le lien' }}
           </button>
           <button class="focus-ring rounded-xl bg-white/5 px-3 py-2 font-body text-xs text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10" @click="shareWhatsApp(c)">
             WhatsApp
@@ -138,7 +138,7 @@ async function removeCard(c: Card) {
             :to="`/cards/${c.id}/rsvps`"
             class="focus-ring rounded-xl bg-gold/15 px-3 py-2 text-center font-body text-xs font-semibold text-gold ring-1 ring-gold/30 transition hover:bg-gold/25"
           >
-            Reponses RSVP
+            Réponses RSVP
           </NuxtLink>
           <button
             class="focus-ring col-span-2 rounded-xl px-3 py-2 font-body text-xs text-coral/70 ring-1 ring-coral/20 transition hover:bg-coral/10 hover:text-coral"

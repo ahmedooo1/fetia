@@ -67,8 +67,8 @@ function resolvePhotoUrl(url?: string) {
 useSeoMeta({
   title: () => (card.value?.data.title ? `${card.value.data.title} - Fetia` : 'Fetia'),
   ogTitle: () => card.value?.data.title || 'Une invitation Fetia',
-  description: () => card.value?.data.subtitle || card.value?.data.message || "Tu es invite(e) ! Decouvre ta carte.",
-  ogDescription: () => card.value?.data.subtitle || card.value?.data.message || "Tu es invite(e) ! Decouvre ta carte.",
+  description: () => card.value?.data.subtitle || card.value?.data.message || "Tu es invité(e) ! Découvre ta carte.",
+  ogDescription: () => card.value?.data.subtitle || card.value?.data.message || "Tu es invité(e) ! Découvre ta carte.",
   ogImage: () => resolvePhotoUrl(card.value?.data.photoUrl),
   twitterCard: 'summary_large_image',
 })
@@ -82,13 +82,13 @@ useSeoMeta({
 
     <div v-else-if="notFound" class="flex min-h-screen flex-col items-center justify-center gap-4 bg-night text-center">
       <p class="font-display text-2xl font-bold text-cream">Cette carte n'existe plus</p>
-      <NuxtLink to="/" class="font-body text-sm text-gold underline">Retour a l'accueil</NuxtLink>
+      <NuxtLink to="/" class="font-body text-sm text-gold underline">Retour à l'accueil</NuxtLink>
     </div>
 
     <div v-else-if="card && !card.isUnlocked" class="flex min-h-screen flex-col items-center justify-center gap-4 bg-night px-6 text-center">
-      <p class="font-display text-2xl font-bold text-cream">Cette carte n'a pas encore ete debloquee</p>
-      <p class="font-body text-sm text-cream/60">La personne qui l'a creee doit finaliser le paiement.</p>
-      <NuxtLink to="/templates" class="font-body text-sm text-gold underline">Creer ma propre carte</NuxtLink>
+      <p class="font-display text-2xl font-bold text-cream">Cette carte n'a pas encore été débloquée</p>
+      <p class="font-body text-sm text-cream/60">La personne qui l'a créée doit finaliser le paiement.</p>
+      <NuxtLink to="/templates" class="font-body text-sm text-gold underline">Créer ma propre carte</NuxtLink>
     </div>
 
     <template v-else-if="card">
@@ -116,13 +116,13 @@ useSeoMeta({
             class="rounded-full bg-night/85 px-4 py-2.5 font-body text-xs font-semibold text-cream/90 shadow-2xl backdrop-blur transition hover:scale-105 disabled:opacity-60"
             @click="downloadImage(downloadName)"
           >
-            {{ downloading ? 'Preparation...' : 'Telecharger l\'image' }}
+            {{ downloading ? 'Préparation...' : 'Télécharger l\'image' }}
           </button>
           <NuxtLink
             to="/templates"
             class="rounded-full bg-night/85 px-5 py-2.5 font-body text-xs font-semibold text-cream/90 shadow-2xl backdrop-blur transition hover:scale-105"
           >
-            Creee avec Fetia
+            Créée avec Fetia
           </NuxtLink>
         </div>
       </div>

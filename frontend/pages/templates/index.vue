@@ -9,7 +9,7 @@ interface Template {
   defaultData: any
 }
 
-useHead({ title: 'Les modeles - Fetia' })
+useHead({ title: 'Les modèles - Fetia' })
 
 const route = useRoute()
 const { request } = useApi()
@@ -17,7 +17,7 @@ const { request } = useApi()
 const categories = [
   { key: '', label: 'Tous' },
   { key: 'anniversaire', label: 'Anniversaire' },
-  { key: 'fete', label: 'Fete' },
+  { key: 'fete', label: 'Fête' },
   { key: 'invitation', label: 'Invitation' },
   { key: 'mariage', label: 'Mariage' },
   { key: 'naissance', label: 'Naissance' },
@@ -35,7 +35,7 @@ async function load() {
     const query = active.value ? `?category=${active.value}` : ''
     templates.value = await request<Template[]>(`/templates${query}`)
   } catch (e) {
-    error.value = "Impossible de charger les modeles pour le moment."
+    error.value = "Impossible de charger les modèles pour le moment."
   } finally {
     loading.value = false
   }
@@ -54,9 +54,9 @@ onMounted(load)
 <template>
   <main class="mx-auto max-w-6xl px-6 py-14">
     <div class="mb-10 max-w-xl">
-      <h1 class="font-display text-4xl font-extrabold text-cream">Les modeles</h1>
+      <h1 class="font-display text-4xl font-extrabold text-cream">Les modèles</h1>
       <p class="mt-3 font-body text-cream/60">
-        Chaque design est pense pour une occasion precise. Clique sur un modele pour le personnaliser.
+        Chaque design est pensé pour une occasion précise. Clique sur un modèle pour le personnaliser.
       </p>
     </div>
 
@@ -85,7 +85,7 @@ onMounted(load)
     </div>
 
     <div v-else class="rounded-3xl border border-white/10 bg-white/5 p-12 text-center">
-      <p class="font-body text-cream/60">Aucun modele dans cette categorie pour l'instant.</p>
+      <p class="font-body text-cream/60">Aucun modèle dans cette catégorie pour l'instant.</p>
     </div>
   </main>
 </template>

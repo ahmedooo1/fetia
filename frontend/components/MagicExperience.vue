@@ -61,7 +61,7 @@ interface Theme {
   layout: Layout
 }
 
-// classic = mariage (floral, romantique) · poster = fete (grand format, punchy)
+// classic = mariage (floral, romantique) · poster = fête (grand format, punchy)
 // editorial = invitation (raffine, minimal) · pastel = naissance (doux, arrondi)
 // celebration = anniversaire (rayonnant, dramatique)
 const themes: Record<Accent, Theme> = {
@@ -116,7 +116,7 @@ const themes: Record<Accent, Theme> = {
     ink: '#F6EFFF',
     accent: '#E9B8FF',
     accentSoft: '#8B5CF6',
-    eyebrow: 'Fete',
+    eyebrow: 'Fête',
     scriptTitle: false,
     particles: '#E9B8FF',
     dark: true,
@@ -128,7 +128,7 @@ const themes: Record<Accent, Theme> = {
     ink: '#FFF3F6',
     accent: '#FF6B8B',
     accentSoft: '#8B5CF6',
-    eyebrow: 'Fete',
+    eyebrow: 'Fête',
     scriptTitle: false,
     particles: '#FF9DB3',
     dark: true,
@@ -162,7 +162,7 @@ const themes: Record<Accent, Theme> = {
     ink: '#6E5F3B',
     accent: '#B9A15C',
     accentSoft: '#DBCB9C',
-    eyebrow: 'Fiancailles',
+    eyebrow: 'Fiançailles',
     scriptTitle: true,
     particles: '#CCB672',
   },
@@ -173,7 +173,7 @@ const themes: Record<Accent, Theme> = {
     ink: '#5C5A50',
     accent: '#A8A28D',
     accentSoft: '#CFCBBB',
-    eyebrow: 'Bapteme',
+    eyebrow: 'Baptême',
     scriptTitle: true,
     particles: '#BBB6A2',
   },
@@ -459,7 +459,7 @@ async function sendRsvp() {
     })
     rsvpDone.value = true
   } catch (e) {
-    rsvpError.value = "L'envoi a echoue, reessaie."
+    rsvpError.value = "L'envoi a échoué, réessaie."
   } finally {
     rsvpSending.value = false
   }
@@ -1111,7 +1111,7 @@ watch(
         :class="rsvpVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
       >
         <p class="text-center text-[11px] font-semibold uppercase tracking-[0.35em]" :style="{ color: t.accent }">
-          Repondez s'il vous plait
+          Répondez s'il vous plaît
         </p>
         <OrnamentDivider :color="t.accent" :style="divider" class="mt-6" />
 
@@ -1120,7 +1120,7 @@ watch(
 
           <div v-if="rsvpDone" class="text-center">
             <p class="text-3xl" :class="accentFontClass" :style="{ color: t.accent }">Merci !</p>
-            <p class="mt-3 italic opacity-75" :class="bodyFontClass">Votre reponse a bien ete transmise.</p>
+            <p class="mt-3 italic opacity-75" :class="bodyFontClass">Votre réponse a bien été transmise.</p>
           </div>
 
           <div v-else class="space-y-5">
@@ -1128,7 +1128,7 @@ watch(
               class="text-center text-sm italic opacity-80"
               :class="bodyFontClass"
             >
-              Serez-vous present ?
+              Serez-vous présent ?
             </p>
             <div
               class="flex justify-center gap-3 rounded-2xl transition"

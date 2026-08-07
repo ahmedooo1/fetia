@@ -1,44 +1,44 @@
 <script setup lang="ts">
-useHead({ title: 'Mentions legales - Fetia' })
+useHead({ title: 'Mentions légales - Fetia' })
 </script>
 
 <template>
   <main class="mx-auto max-w-3xl px-6 py-16">
-    <h1 class="font-display text-3xl font-bold text-cream">Mentions legales</h1>
+    <h1 class="font-display text-3xl font-bold text-cream">Mentions légales</h1>
 
     <div class="mt-8 space-y-8 font-body text-sm leading-relaxed text-cream/70">
       <section>
-        <h2 class="font-display text-lg font-semibold text-cream">Editeur du site</h2>
+        <h2 class="font-display text-lg font-semibold text-cream">Éditeur du site</h2>
         <p class="mt-2">
-          [A COMPLETER : nom ou raison sociale, forme juridique, adresse du siege, numero SIRET/SIREN
-          si activite commerciale, capital social le cas echeant]<br />
-          Directeur de la publication : [A COMPLETER : nom]<br />
-          Contact : [A COMPLETER : email de contact]
+          [À COMPLÉTER : nom ou raison sociale, forme juridique, adresse du siège, numéro SIRET/SIREN
+          si activité commerciale, capital social le cas échéant]<br />
+          Directeur de la publication : [À COMPLÉTER : nom]<br />
+          Contact : [À COMPLÉTER : email de contact]
         </p>
       </section>
 
       <section>
-        <h2 class="font-display text-lg font-semibold text-cream">Hebergement</h2>
+        <h2 class="font-display text-lg font-semibold text-cream">Hébergement</h2>
         <p class="mt-2">
-          Application : [A COMPLETER : nom de l'hebergeur, adresse, telephone]<br />
+          Application : [À COMPLÉTER : nom de l'hébergeur, adresse, téléphone]<br />
           Envoi d'emails : Google LLC (Gmail SMTP)
         </p>
       </section>
 
       <section>
-        <h2 class="font-display text-lg font-semibold text-cream">Propriete intellectuelle</h2>
+        <h2 class="font-display text-lg font-semibold text-cream">Propriété intellectuelle</h2>
         <p class="mt-2">
-          L'ensemble des elements du site Fetia (textes, graphismes, logo, modeles de cartes) est
-          protege par le droit d'auteur. Toute reproduction non autorisee est interdite.
+          L'ensemble des éléments du site Fetia (textes, graphismes, logo, modèles de cartes) est
+          protégé par le droit d'auteur. Toute reproduction non autorisée est interdite.
         </p>
       </section>
 
       <section>
         <h2 class="font-display text-lg font-semibold text-cream">Traceurs et cookies</h2>
         <p class="mt-2">
-          Fetia utilise uniquement des traceurs strictement necessaires au fonctionnement du
-          service (session de connexion, stockee dans le navigateur). Aucun cookie publicitaire ou
-          de mesure d'audience tiers n'est depose a ce jour.
+          Fetia utilise uniquement des traceurs strictement nécessaires au fonctionnement du
+          service (session de connexion, stockée dans le navigateur). Aucun cookie publicitaire ou
+          de mesure d'audience tiers n'est déposé à ce jour.
         </p>
       </section>
 

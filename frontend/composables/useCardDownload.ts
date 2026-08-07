@@ -142,7 +142,7 @@ export function useCardDownload(cardRef: Ref<CardHandle | null>) {
       a.click()
       URL.revokeObjectURL(url)
     } catch (e) {
-      downloadError.value = "Le telechargement a echoue, reessaie."
+      downloadError.value = "Le téléchargement a échoué, réessaie."
     } finally {
       downloading.value = false
     }
