@@ -75,7 +75,7 @@ const demos: Record<string, any> = {
 
 const demo = computed(() => demos[route.params.accent as string] || demos.gold)
 
-useHead({ title: `Fetia — Demo ${route.params.accent}` })
+useHead({ title: `Fetia - Demo ${route.params.accent}` })
 </script>
 
 <template>

@@ -83,7 +83,7 @@ export function renderEmail(bodyHtml: string): string {
             </tr>
             <tr>
               <td style="padding:18px 32px;background:#FAF7F1;border-top:1px solid #EAE3D6;font-family:${FONT_STACK};font-size:12px;color:#9A8F7A;">
-                Fetia — Fait avec soin pour les moments qui comptent.<br />&copy; ${year} Fetia
+                Fetia - Fait avec soin pour les moments qui comptent.<br />&copy; ${year} Fetia
               </td>
             </tr>
           </table>

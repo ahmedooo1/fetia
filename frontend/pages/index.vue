@@ -118,7 +118,7 @@ const showcase = [
         />
       </div>
       <p class="mt-4 text-center font-body text-xs text-cream/40">
-        Demo interactive — touchez le sceau, puis faites defiler a l'interieur de la carte
+        Demo interactive - touchez le sceau, puis faites defiler a l'interieur de la carte
       </p>
     </section>
 

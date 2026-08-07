@@ -43,10 +43,43 @@ export function useCardDownload(cardRef: Ref<CardHandle | null>) {
     // completement chargees et mesurees : sinon html2canvas peut calculer la
     // position verticale du texte avec les metriques de la police de repli,
     // ce qui decale le texte vers le bas dans l'image exportee
-    if (typeof document !== 'undefined' && document.fonts?.ready) {
+    if (typeof document !== 'undefined' && document.fonts) {
       await document.fonts.ready
+
+      // Verifie que les polices personnalisees sont effectivement activees.
+      // document.fonts.ready peut ressembler a `true` alors que certaines
+      // fontes (avec font-display: swap) sont encore en fallback. On verifie
+      // explicitement quelques familles principales et on attend jusqu'a 2s.
+      const familiesToCheck = [
+        'Cormorant Garamond',
+        'Great Vibes',
+        'Fraunces',
+        'Playfair Display',
+        'Baloo 2',
+      ]
+
+      const deadline = Date.now() + 2000
+      async function fontsReady() {
+        for (const fam of familiesToCheck) {
+          try {
+            // check retourne true si une fonte de cette famille est disponible
+            if (document.fonts.check(`1rem "${fam}"`)) continue
+            return false
+          } catch {
+            return false
+          }
+        }
+        return true
+      }
+
+      while (!(await fontsReady()) && Date.now() < deadline) {
+        // petite pause avant de retester
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((r) => setTimeout(r, 80))
+      }
+    } else {
+      await new Promise((r) => setTimeout(r, 60))
     }
-    await new Promise((r) => setTimeout(r, 60))
   }
 
   async function runCapture(target: HTMLElement, foreignObjectRendering: boolean) {

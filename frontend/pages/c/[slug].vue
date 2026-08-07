@@ -57,7 +57,7 @@ function resolvePhotoUrl(url?: string) {
 }
 
 useSeoMeta({
-  title: () => (card.value?.data.title ? `${card.value.data.title} — Fetia` : 'Fetia'),
+  title: () => (card.value?.data.title ? `${card.value.data.title} - Fetia` : 'Fetia'),
   ogTitle: () => card.value?.data.title || 'Une invitation Fetia',
   description: () => card.value?.data.subtitle || card.value?.data.message || "Tu es invite(e) ! Decouvre ta carte.",
   ogDescription: () => card.value?.data.subtitle || card.value?.data.message || "Tu es invite(e) ! Decouvre ta carte.",

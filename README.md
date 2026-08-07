@@ -1,6 +1,6 @@
 # Fetia
 
-Des cartes d'invitation et de fete trop belles — anniversaire, invitation, mariage, naissance — creees en ligne, personnalisees en direct, et partagees en un lien.
+Des cartes d'invitation et de fete trop belles - anniversaire, invitation, mariage, naissance - creees en ligne, personnalisees en direct, et partagees en un lien.
 
 ## Stack
 
