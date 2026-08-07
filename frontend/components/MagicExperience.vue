@@ -484,16 +484,21 @@ function open() {
         try {
           youtubePlayer.value.playVideo()
           musicPlaying.value = true
+            setTimeout(() => {
+              if (!musicPlaying.value) autoplayBlocked.value = true
+            }, 700)
         } catch {}
       }).catch(() => {})
     } else {
       try {
         const t = new Audio(props.musicUrl)
         t.loop = true
-        t.play().then(() => {
-          tempAudioRef.value = t
-          musicPlaying.value = true
-        }).catch(() => {})
+          t.play().then(() => {
+            tempAudioRef.value = t
+            musicPlaying.value = true
+          }).catch(() => {
+            autoplayBlocked.value = true
+          })
       } catch {}
     }
   }
@@ -576,6 +581,7 @@ const youtubeContainerRef = ref<HTMLElement | null>(null)
 const youtubeTempContainerRef = ref<HTMLElement | null>(null)
 const youtubePlayer = ref<any>(null)
 const musicPlaying = ref(false)
+const autoplayBlocked = ref(false)
 
 const isYouTube = computed(() => {
   if (!props.musicUrl) return false
@@ -727,6 +733,33 @@ function toggleMusic() {
   }
 }
 
+async function userStartMusic() {
+  // Called from a user gesture to (re)start music when autoplay was blocked
+  autoplayBlocked.value = false
+  if (!props.musicUrl) return
+  try {
+    if (isYouTube.value) {
+      if (!youtubePlayer.value) await createYouTubePlayer()
+      try {
+        youtubePlayer.value.playVideo()
+        // rely on onStateChange to set musicPlaying
+      } catch (e) {
+        // nothing
+      }
+    } else {
+      if (!audioRef.value) {
+        const a = new Audio(props.musicUrl)
+        a.loop = true
+        audioRef.value = a
+      }
+      try {
+        await audioRef.value.play()
+        musicPlaying.value = true
+      } catch {}
+    }
+  } catch {}
+}
+
 const { target: detailsTarget, visible: detailsVisible } = useScrollReveal()
 const { target: timelineTarget, visible: timelineVisible } = useScrollReveal()
 const { target: closingTarget, visible: closingVisible } = useScrollReveal()
@@ -769,14 +802,22 @@ watch(
             }
             if (youtubePlayer.value && youtubePlayer.value.playVideo) {
               youtubePlayer.value.playVideo()
-              musicPlaying.value = true
+              // If YT player doesn't report playing within a short window,
+              // assume autoplay was blocked and show the CTA.
+              setTimeout(() => {
+                if (!musicPlaying.value) autoplayBlocked.value = true
+              }, 700)
             }
           } catch {}
         } else {
           try {
             if (audioRef.value instanceof HTMLAudioElement) {
-              await audioRef.value.play()
-              musicPlaying.value = true
+              try {
+                await audioRef.value.play()
+                musicPlaying.value = true
+              } catch {
+                autoplayBlocked.value = true
+              }
             }
           } catch {}
         }
@@ -1019,6 +1060,17 @@ watch(
           Touchez pour ouvrir
         </p>
       </button>
+
+      <!-- Autoplay blocked fallback: small CTA to let user enable audio -->
+      <div v-if="autoplayBlocked" class="fixed bottom-24 right-6 z-50">
+        <button
+          type="button"
+          @click="userStartMusic"
+          class="rounded-full bg-gold/95 px-4 py-2 font-body text-sm font-semibold text-night shadow-lg"
+        >
+          Activer la musique
+        </button>
+      </div>
 
       <ConfettiCanvas v-if="variant === 'burst'" ref="confettiRef" class="z-30" />
 
