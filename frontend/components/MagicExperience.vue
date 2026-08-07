@@ -508,8 +508,21 @@ const resolvedPhoto = computed(() => {
   if (!props.photoUrl) return ''
   if (props.photoUrl.startsWith('http')) return props.photoUrl
   const config = useRuntimeConfig()
-  const origin = (config.public.apiBase as string).replace(/\/api\/?$/, '')
-  return `${origin}${props.photoUrl}`
+  const rawOrigin = (config.public.apiBase as string) || ''
+  const origin = rawOrigin.replace(/\/api\/?$/, '')
+
+  // Normalize photo path:
+  // - '/uploads/xxx' -> keep leading slash
+  // - 'uploads/xxx' -> '/uploads/xxx'
+  // - 'filename.jpg' -> '/uploads/filename.jpg' (legacy entries)
+  let path = props.photoUrl
+  if (!path.startsWith('/')) {
+    if (path.startsWith('uploads/')) path = `/${path}`
+    else path = `/uploads/${path}`
+  }
+
+  // If origin is empty, return absolute path so browser requests host/uploads/...
+  return origin ? `${origin}${path}` : path
 })
 
 // ---- COUNTDOWN ----
@@ -630,9 +643,27 @@ async function createYouTubePlayer() {
   }
   await loadYouTubeAPI()
   if ((window as any).YT && (window as any).YT.Player) {
-    youtubePlayer.value = new (window as any).YT.Player(target, {
+    // Ensure the target has a stable id — passing an element id string to
+    // YT.Player avoids potential contentWindow/origin mismatches that can
+    // happen when the iframe is created inside a transient DOM node.
+    let targetId: string
+    if (typeof target === 'string') targetId = target
+    else {
+      targetId = (target as HTMLElement).id || `yt-temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+      ;(target as HTMLElement).id = targetId
+    }
+
+    youtubePlayer.value = new (window as any).YT.Player(targetId, {
       videoId: id,
-      playerVars: { autoplay: 0, controls: 0, rel: 0, modestbranding: 1, disablekb: 1, playsinline: 1 },
+      playerVars: {
+        autoplay: 0,
+        controls: 0,
+        rel: 0,
+        modestbranding: 1,
+        disablekb: 1,
+        playsinline: 1,
+        origin: window.location.origin,
+      },
       events: {
         onStateChange: (e: any) => {
           // 1 = playing, 2 = paused, 0 = ended

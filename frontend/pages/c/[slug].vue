@@ -52,8 +52,16 @@ const config = useRuntimeConfig()
 function resolvePhotoUrl(url?: string) {
   if (!url) return undefined
   if (url.startsWith('http')) return url
-  const origin = (config.public.apiBase as string).replace(/\/api\/?$/, '')
-  return `${origin}${url}`
+  const rawOrigin = (config.public.apiBase as string) || ''
+  const origin = rawOrigin.replace(/\/api\/?$/, '')
+
+  let path = url
+  if (!path.startsWith('/')) {
+    if (path.startsWith('uploads/')) path = `/${path}`
+    else path = `/uploads/${path}`
+  }
+
+  return origin ? `${origin}${path}` : path
 }
 
 useSeoMeta({
