@@ -28,7 +28,7 @@ const demos: Record<string, any> = {
     location: 'La Grange aux Saules, Elbeuf',
     timeline: [
       { time: '15h30', label: 'Cérémonie laïque' },
-      { time: '17h00', label: 'Vin d'honneur' },
+      { time: '17h00', label: "Vin d'honneur" },
       { time: '19h30', label: 'Repas champêtre' },
       { time: '23h00', label: 'Feu de camp et guimauves' },
     ],
@@ -47,7 +47,7 @@ const demos: Record<string, any> = {
     accent: 'sunset',
     title: 'Lina a 25 ans',
     subtitle: 'et ça se fête',
-    message: 'Un quart de siècle, ça mérite mieux qu'un simple message.',
+    message: "Un quart de siècle, ça mérite mieux qu'un simple message.",
     date: 'Samedi 19 septembre, 19h',
     location: 'Le Rooftop, Rouen',
     timeline: [
