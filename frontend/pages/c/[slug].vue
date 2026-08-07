@@ -47,6 +47,23 @@ onMounted(async () => {
 const magicRef = ref()
 const { downloading, downloadError, downloadImage } = useCardDownload(magicRef)
 const downloadName = computed(() => card.value?.data.title || 'ma-carte')
+
+const config = useRuntimeConfig()
+function resolvePhotoUrl(url?: string) {
+  if (!url) return undefined
+  if (url.startsWith('http')) return url
+  const origin = (config.public.apiBase as string).replace(/\/api\/?$/, '')
+  return `${origin}${url}`
+}
+
+useSeoMeta({
+  title: () => (card.value?.data.title ? `${card.value.data.title} — Fetia` : 'Fetia'),
+  ogTitle: () => card.value?.data.title || 'Une invitation Fetia',
+  description: () => card.value?.data.subtitle || card.value?.data.message || "Tu es invite(e) ! Decouvre ta carte.",
+  ogDescription: () => card.value?.data.subtitle || card.value?.data.message || "Tu es invite(e) ! Decouvre ta carte.",
+  ogImage: () => resolvePhotoUrl(card.value?.data.photoUrl),
+  twitterCard: 'summary_large_image',
+})
 </script>
 
 <template>

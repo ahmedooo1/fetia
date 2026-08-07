@@ -380,6 +380,19 @@ const photoWrapClass = computed(() => {
   }
 })
 
+function sunburstLines(count: number) {
+  let inner = ''
+  for (let i = 1; i <= count; i++) {
+    const angle = (i * Math.PI) / (count / 2)
+    const x2 = 100 + 100 * Math.cos(angle)
+    const y2 = 100 + 100 * Math.sin(angle)
+    inner += `<line x1="100" y1="100" x2="${x2}" y2="${y2}" stroke="currentColor" stroke-width="1"/>`
+  }
+  return inner
+}
+const sunburstHero = computed(() => svgBackgroundUrl(sunburstLines(24), '0 0 200 200', t.value.accent))
+const sunburstCover = computed(() => svgBackgroundUrl(sunburstLines(20), '0 0 200 200', t.value.accent))
+
 const opened = ref(props.forceOpen)
 const opening = ref(false)
 const confettiRef = ref<{ burst: () => void } | null>(null)
@@ -550,8 +563,8 @@ defineExpose({ open, opened })
       class="relative flex flex-col items-center justify-center px-6 text-center"
       :class="compact ? 'min-h-[540px] py-14' : 'min-h-[92vh] py-20'"
     >
-      <OrnamentFrame :color="t.accent" :style="frame" />
-
+      <OrnamentFrame v-if="opened" :color="t.accent" :style="frame" style="--frame-inset:2.5rem" />
+        
       <!-- ornements du hero, selon le layout -->
       <template v-if="layout === 'classic'">
         <div class="pointer-events-none absolute inset-x-0 top-6 flex justify-center">
@@ -589,11 +602,11 @@ defineExpose({ open, opened })
       </template>
 
       <!-- CELEBRATION : rayons depuis le centre -->
-      <svg v-else-if="layout === 'celebration'" class="pointer-events-none absolute left-1/2 top-1/2 h-[140cqw] w-[140cqw] -translate-x-1/2 -translate-y-1/2 opacity-[0.16]" viewBox="0 0 200 200" :style="{ color: t.accent }">
-        <g stroke="currentColor" stroke-width="1">
-          <line v-for="i in 24" :key="i" x1="100" y1="100" :x2="100 + 100 * Math.cos((i * Math.PI) / 12)" :y2="100 + 100 * Math.sin((i * Math.PI) / 12)" />
-        </g>
-      </svg>
+      <div
+        v-else-if="layout === 'celebration'"
+        class="pointer-events-none absolute left-1/2 top-1/2 h-[140cqw] w-[140cqw] -translate-x-1/2 -translate-y-1/2 opacity-[0.16]"
+        :style="{ backgroundImage: sunburstHero, backgroundSize: '100% 100%' }"
+      />
 
       <!-- contenu revele -->
       <div
@@ -662,7 +675,7 @@ defineExpose({ open, opened })
         aria-label="Ouvrir la carte"
         @click="open"
       >
-        <OrnamentFrame :color="t.accent" :style="frame" />
+        
 
         <!-- enveloppe (plis) pour le theme gold -->
         <svg v-if="variant === 'seal'" class="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -698,11 +711,21 @@ defineExpose({ open, opened })
           <div class="pointer-events-none absolute left-6 top-10 h-24 w-24 rounded-full opacity-40 blur-2xl" :style="{ background: t.accentSoft }" />
           <div class="pointer-events-none absolute bottom-10 right-6 h-24 w-24 rounded-full opacity-40 blur-2xl" :style="{ background: t.accent }" />
         </template>
-        <svg v-else-if="layout === 'celebration'" class="pointer-events-none absolute left-1/2 top-1/2 h-[120cqw] w-[120cqw] -translate-x-1/2 -translate-y-1/2 opacity-20" viewBox="0 0 200 200" :style="{ color: t.accent }">
-          <g stroke="currentColor" stroke-width="1">
-            <line v-for="i in 20" :key="i" x1="100" y1="100" :x2="100 + 100 * Math.cos((i * Math.PI) / 10)" :y2="100 + 100 * Math.sin((i * Math.PI) / 10)" />
-          </g>
-        </svg>
+        <div
+          v-else-if="layout === 'celebration'"
+          class="pointer-events-none absolute left-1/2 top-1/2 h-[120cqw] w-[120cqw] -translate-x-1/2 -translate-y-1/2 opacity-20"
+          :style="{ backgroundImage: sunburstCover, backgroundSize: '100% 100%' }"
+        />
+
+        <!-- halo lumineux qui pulse pour inviter au clic -->
+        <div
+          class="glow-pulse pointer-events-none absolute left-1/2 top-1/2 z-[5] h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full"
+          :style="{ background: `radial-gradient(circle, ${t.accent}80, transparent 70%)` }"
+        />
+        <div
+          class="glow-pulse glow-pulse-delay pointer-events-none absolute left-1/2 top-1/2 z-[5] h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full"
+          :style="{ background: `radial-gradient(circle, ${t.accent}80, transparent 70%)` }"
+        />
 
         <!-- SEAL -->
         <template v-if="variant === 'seal'">
@@ -797,8 +820,8 @@ defineExpose({ open, opened })
         </p>
         <div v-if="!countdown.over" class="mx-auto mt-8 flex max-w-md items-stretch justify-center gap-3">
           <div v-for="unit in [[countdown.d, 'jours'], [countdown.h, 'heures'], [countdown.m, 'min'], [countdown.s, 'sec']]" :key="unit[1] as string" class="flex-1">
-            <div class="relative rounded-2xl border px-2 py-4" :style="{ borderColor: t.accentSoft }">
-              <p class="font-semibold tabular-nums" :class="bodyFontClass" :style="{ fontSize: 'clamp(1.6rem, 6cqw, 2.6rem)' }">
+            <div class="relative flex items-center justify-center rounded-2xl border px-2 py-4" :style="{ borderColor: t.accentSoft }">
+              <p class="font-semibold tabular-nums leading-none" :class="bodyFontClass" :style="{ fontSize: 'clamp(1.6rem, 6cqw, 2.6rem)' }">
                 {{ String(unit[0]).padStart(2, '0') }}
               </p>
             </div>
@@ -819,8 +842,8 @@ defineExpose({ open, opened })
         <p class="mt-8 text-[11px] font-semibold uppercase tracking-[0.35em]" :style="{ color: t.accent }">
           Quand &amp; ou
         </p>
-        <div class="relative mx-auto mt-8 max-w-md px-10 py-12">
-          <OrnamentFrame :color="t.accent" :style="frame" />
+        <div class="relative mx-auto mt-8 max-w-md px-10 py-12 lg:px-16 lg:py-16">
+          <OrnamentFrame v-if="opened" :color="t.accent" :style="frame" style="--frame-inset:2rem" />
           <p v-if="date" class="break-words font-semibold" :class="bodyFontClass" :style="{ fontSize: 'clamp(1.3rem, 4.5cqw, 1.9rem)' }">{{ date }}</p>
           <p v-if="location" class="mt-3 break-words italic opacity-70" :class="bodyFontClass" :style="{ fontSize: 'clamp(0.95rem, 2.8cqw, 1.15rem)' }">{{ location }}</p>
           <a
@@ -887,10 +910,11 @@ defineExpose({ open, opened })
         <OrnamentDivider :color="t.accent" :style="divider" class="mt-10" />
       </section>
 
-      <!-- RSVP -->
+      <!-- RSVP : exclu du telechargement image (formulaire interactif, inutile sur une image statique) -->
       <section
         v-if="rsvpSlug"
         ref="rsvpTarget"
+        data-html2canvas-ignore
         class="relative px-6 pb-28 pt-4 transition-all duration-1000"
         :class="rsvpVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
       >
@@ -899,8 +923,8 @@ defineExpose({ open, opened })
         </p>
         <OrnamentDivider :color="t.accent" :style="divider" class="mt-6" />
 
-        <div class="relative mx-auto mt-10 max-w-md px-8 py-10">
-          <OrnamentFrame :color="t.accent" :style="frame" />
+        <div class="relative mx-auto mt-10 max-w-md px-10 py-14 lg:px-16 lg:py-18">
+          <OrnamentFrame v-if="opened" :color="t.accent" :style="frame" style="--frame-inset:2.5rem" />
 
           <div v-if="rsvpDone" class="text-center">
             <p class="text-3xl" :class="accentFontClass" :style="{ color: t.accent }">Merci !</p>
@@ -1053,12 +1077,39 @@ defineExpose({ open, opened })
   transform: scale(2.2);
 }
 
+/* halo lumineux qui pulse pour inviter au clic sur la carte fermee */
+.glow-pulse {
+  animation: pulseGlow 2.2s ease-out infinite;
+}
+.glow-pulse-delay {
+  animation-delay: 1.1s;
+}
+@keyframes pulseGlow {
+  0% {
+    transform: translate(-50%, -50%) scale(0.75);
+    opacity: 0.6;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.9);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cover,
   .seal,
   .petal,
   .sunrise-glow {
     transition-duration: 0.05s;
+  }
+  .glow-pulse {
+    animation: none;
+    opacity: 0.35;
+    transform: translate(-50%, -50%) scale(1.1);
   }
 }
 </style>

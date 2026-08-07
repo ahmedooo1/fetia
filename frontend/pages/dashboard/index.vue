@@ -50,7 +50,8 @@ function copyLink(c: Card) {
 }
 
 function shareWhatsApp(c: Card) {
-  const text = encodeURIComponent(`${c.data.title || 'Une carte pour toi'} — ${cardUrl(c.slug)}`)
+  const intro = c.data.title || 'Une surprise pour toi'
+  const text = encodeURIComponent(`${intro} 🎉 Voici un petit cadeau pour toi 👉 ${cardUrl(c.slug)}`)
   window.open(`https://wa.me/?text=${text}`, '_blank')
 }
 
