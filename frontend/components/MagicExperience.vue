@@ -480,15 +480,8 @@ function open() {
   // attempt to start music immediately (user gesture)
   if (props.musicUrl) {
     if (isYouTube.value) {
-      createYouTubePlayer().then(() => {
-        try {
-          youtubePlayer.value.playVideo()
-          musicPlaying.value = true
-            setTimeout(() => {
-              if (!musicPlaying.value) autoplayBlocked.value = true
-            }, 700)
-        } catch {}
-      }).catch(() => {})
+      youtubeReloadKey.value += 1
+      musicPlaying.value = true
     } else {
       try {
         const t = new Audio(props.musicUrl)
@@ -540,10 +533,6 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   if (countdownTimer) clearInterval(countdownTimer)
-  // clean up youtube player if any
-  try {
-    destroyYouTubePlayer()
-  } catch {}
   if (tempAudioRef.value) {
     try {
       tempAudioRef.value.pause()
@@ -577,9 +566,7 @@ const mapsUrl = computed(() =>
 // ---- MUSIQUE ----
 const audioRef = ref<HTMLAudioElement | null>(null)
 const tempAudioRef = ref<HTMLAudioElement | null>(null)
-const youtubeContainerRef = ref<HTMLElement | null>(null)
-const youtubeTempContainerRef = ref<HTMLElement | null>(null)
-const youtubePlayer = ref<any>(null)
+const youtubeReloadKey = ref(0)
 const musicPlaying = ref(false)
 const autoplayBlocked = ref(false)
 
@@ -613,111 +600,31 @@ function extractYouTubeId(url: string) {
   return null
 }
 
-function loadYouTubeAPI(): Promise<void> {
-  return new Promise((resolve) => {
-    if ((window as any).YT && (window as any).YT.Player) return resolve()
-    const existing = document.querySelector('script[src="https://www.youtube.com/iframe_api"]')
-    if (existing) {
-      ;(window as any).onYouTubeIframeAPIReady = () => resolve()
-      return
-    }
-    const s = document.createElement('script')
-    s.src = 'https://www.youtube.com/iframe_api'
-    document.head.appendChild(s)
-    ;(window as any).onYouTubeIframeAPIReady = () => resolve()
-  })
-}
-
-async function createYouTubePlayer() {
-  if (!props.musicUrl) return
+const youtubeEmbedSrc = computed(() => {
+  if (!props.musicUrl) return ''
   const id = extractYouTubeId(props.musicUrl)
-  if (!id) return
-  // decide target container: prefer component ref, else create a temporary hidden div
-  let target: HTMLElement | null = youtubeContainerRef.value
-  if (!target) {
-    if (!youtubeTempContainerRef.value) {
-      const d = document.createElement('div')
-      d.style.position = 'absolute'
-      d.style.left = '-9999px'
-      d.style.width = '1px'
-      d.style.height = '1px'
-      d.setAttribute('aria-hidden', 'true')
-      document.body.appendChild(d)
-      youtubeTempContainerRef.value = d
-    }
-    target = youtubeTempContainerRef.value
-  }
-  await loadYouTubeAPI()
-  if ((window as any).YT && (window as any).YT.Player) {
-    // Ensure the target has a stable id — passing an element id string to
-    // YT.Player avoids potential contentWindow/origin mismatches that can
-    // happen when the iframe is created inside a transient DOM node.
-    let targetId: string
-    if (typeof target === 'string') targetId = target
-    else {
-      targetId = (target as HTMLElement).id || `yt-temp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-      ;(target as HTMLElement).id = targetId
-    }
-
-    youtubePlayer.value = new (window as any).YT.Player(targetId, {
-      videoId: id,
-      playerVars: {
-        autoplay: 0,
-        controls: 0,
-        rel: 0,
-        modestbranding: 1,
-        disablekb: 1,
-        playsinline: 1,
-        origin: window.location.origin,
-      },
-      events: {
-        onStateChange: (e: any) => {
-          // 1 = playing, 2 = paused, 0 = ended
-          musicPlaying.value = e.data === 1
-        },
-      },
-    })
-  }
-}
-
-function destroyYouTubePlayer() {
-  if (youtubePlayer.value && youtubePlayer.value.destroy) {
-    youtubePlayer.value.destroy()
-    youtubePlayer.value = null
-  }
-  if (youtubeTempContainerRef.value) {
-    try {
-      youtubeTempContainerRef.value.remove()
-    } catch {}
-    youtubeTempContainerRef.value = null
-  }
-}
+  if (!id) return ''
+  const params = new URLSearchParams({
+    autoplay: '1',
+    controls: '0',
+    rel: '0',
+    modestbranding: '1',
+    playsinline: '1',
+    loop: '1',
+    playlist: id,
+    mute: '0',
+  })
+  return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`
+})
 
 function toggleMusic() {
   if (isYouTube.value) {
-    if (!youtubePlayer.value) {
-      // create player and autoplay when ready
-      createYouTubePlayer().then(() => {
-        try {
-          youtubePlayer.value.playVideo()
-          musicPlaying.value = true
-        } catch {
-          /* ignore */
-        }
-      })
+    if (musicPlaying.value) {
+      musicPlaying.value = false
       return
     }
-    try {
-      if (musicPlaying.value) {
-        youtubePlayer.value.pauseVideo()
-        musicPlaying.value = false
-      } else {
-        youtubePlayer.value.playVideo()
-        musicPlaying.value = true
-      }
-    } catch {
-      /* ignore */
-    }
+    youtubeReloadKey.value += 1
+    musicPlaying.value = true
     return
   }
 
@@ -739,13 +646,8 @@ async function userStartMusic() {
   if (!props.musicUrl) return
   try {
     if (isYouTube.value) {
-      if (!youtubePlayer.value) await createYouTubePlayer()
-      try {
-        youtubePlayer.value.playVideo()
-        // rely on onStateChange to set musicPlaying
-      } catch (e) {
-        // nothing
-      }
+      youtubeReloadKey.value += 1
+      musicPlaying.value = true
     } else {
       if (!audioRef.value) {
         const a = new Audio(props.musicUrl)
@@ -796,19 +698,8 @@ watch(
       // if musicUrl provided, ensure playback starts when opened
       if (props.musicUrl && !musicPlaying.value) {
         if (isYouTube.value) {
-          try {
-            if (!youtubePlayer.value) {
-              await createYouTubePlayer()
-            }
-            if (youtubePlayer.value && youtubePlayer.value.playVideo) {
-              youtubePlayer.value.playVideo()
-              // If YT player doesn't report playing within a short window,
-              // assume autoplay was blocked and show the CTA.
-              setTimeout(() => {
-                if (!musicPlaying.value) autoplayBlocked.value = true
-              }, 700)
-            }
-          } catch {}
+          youtubeReloadKey.value += 1
+          musicPlaying.value = true
         } else {
           try {
             if (audioRef.value instanceof HTMLAudioElement) {
@@ -1076,12 +967,16 @@ watch(
 
       <!-- musique de fond -->
       <template v-if="musicUrl && opened">
-        <div
-          v-if="isYouTube"
-          ref="youtubeContainerRef"
+        <iframe
+          v-if="isYouTube && musicPlaying"
+          :key="youtubeReloadKey"
+          :src="youtubeEmbedSrc"
           class="pointer-events-none"
           style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;"
           aria-hidden="true"
+          title="YouTube music player"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"
         />
         <audio v-else ref="audioRef" :src="musicUrl" loop preload="none" />
         <button
