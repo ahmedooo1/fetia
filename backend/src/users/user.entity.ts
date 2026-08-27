@@ -21,6 +21,9 @@ export class User {
   @Column({ nullable: true })
   name: string;
 
+  @Column({ default: false })
+  emailVerified: boolean;
+
   @Column({ type: 'varchar', nullable: true })
   resetPasswordTokenHash: string | null;
 

@@ -34,4 +34,16 @@ export class AuthController {
   resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto);
   }
+
+  @Throttle({ default: { limit: 8, ttl: 10 * 60 * 1000 } })
+  @Post('verify-email')
+  verifyEmail(@Body('token') token: string) {
+    return this.authService.verifyEmail(token);
+  }
+
+  @Throttle({ default: { limit: 5, ttl: 10 * 60 * 1000 } })
+  @Post('resend-verification')
+  resendVerification(@Body('email') email: string) {
+    return this.authService.resendVerification(email);
+  }
 }

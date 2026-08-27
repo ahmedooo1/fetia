@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
@@ -38,7 +38,10 @@ export class AuthService {
       passwordHash,
       name: dto.name,
     });
-    return { accessToken: this.sign(user.id), user: this.toPublic(user) };
+
+    await this.sendVerificationEmail(user.id, user.email);
+
+    return { requiresVerification: true, email: user.email };
   }
 
   async login(dto: LoginDto) {
@@ -46,7 +49,49 @@ export class AuthService {
     if (!user) throw new UnauthorizedException('Identifiants invalides');
     const valid = await bcrypt.compare(dto.password, user.passwordHash);
     if (!valid) throw new UnauthorizedException('Identifiants invalides');
+    if (!user.emailVerified) throw new ForbiddenException('EMAIL_NOT_VERIFIED');
     return { accessToken: this.sign(user.id), user: this.toPublic(user) };
+  }
+
+  private async sendVerificationEmail(userId: string, email: string) {
+    const token = this.jwtService.sign({ sub: userId, purpose: 'verify_email' }, { expiresIn: '7d' });
+    const verifyUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/verification/${token}`;
+
+    if (!this.mailService.isConfigured()) return;
+    const body = `
+      <p style="margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#C98A4B;">Fetia</p>
+      <h1 style="margin:0 0 16px;font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:700;color:#1B0E2E;">Confirme ton adresse email</h1>
+      <p style="margin:0;color:#3A3226;">Bienvenue sur Fetia ! Clique sur le bouton ci-dessous pour activer ton compte.</p>
+      ${emailButton(escapeHtml(verifyUrl), 'Confirmer mon email')}
+      <p style="margin:16px 0 0;font-size:12px;color:#9A8F7A;word-break:break-all;">Le bouton ne fonctionne pas ? Copie ce lien : ${escapeHtml(verifyUrl)}</p>
+    `;
+    await this.mailService
+      .send({
+        to: email,
+        subject: 'Confirme ton adresse email - Fetia',
+        text: `Clique sur ce lien pour confirmer ton adresse email :\n${verifyUrl}`,
+        html: renderEmail(body),
+      })
+      .catch(() => undefined);
+  }
+
+  async verifyEmail(token: string) {
+    try {
+      const payload = this.jwtService.verify(token);
+      if (payload.purpose !== 'verify_email') throw new Error();
+      await this.usersService.setEmailVerified(payload.sub);
+      return { success: true };
+    } catch {
+      throw new UnauthorizedException('Lien invalide ou expire');
+    }
+  }
+
+  async resendVerification(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (user && !user.emailVerified) {
+      await this.sendVerificationEmail(user.id, user.email);
+    }
+    return { success: true };
   }
 
   async forgotPassword(dto: ForgotPasswordDto) {
