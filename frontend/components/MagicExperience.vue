@@ -979,7 +979,7 @@ watch(
           :key="youtubeReloadKey"
           :src="youtubeEmbedSrc"
           class="pointer-events-none"
-          style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;"
+          style="position:fixed;bottom:0;right:0;width:2px;height:2px;opacity:0.01;overflow:hidden;"
           aria-hidden="true"
           title="YouTube music player"
           allow="autoplay; encrypted-media; picture-in-picture"
