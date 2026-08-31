@@ -482,13 +482,6 @@ function open() {
     if (isYouTube.value) {
       youtubeReloadKey.value += 1
       musicPlaying.value = true
-      // Unlike the direct <audio> path below, a cross-origin YouTube iframe
-      // gives no reliable way to detect whether unmuted autoplay actually
-      // started (no play() promise to await) - browsers commonly block it
-      // silently for an embed the visitor has no prior engagement with, so
-      // this just assumes failure and always offers the manual button
-      // rather than risk leaving the visitor with silence and no way out.
-      autoplayBlocked.value = true
     } else {
       try {
         const t = new Audio(props.musicUrl)
