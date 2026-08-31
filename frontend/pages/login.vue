@@ -6,7 +6,7 @@ const route = useRoute()
 
 const email = ref('')
 const password = ref('')
-const errorMsg = ref('')
+const errorMsg = ref(route.query.expired === '1' ? 'Ta session a expiré, reconnecte-toi.' : '')
 const loading = ref(false)
 const needsVerification = ref(false)
 const resendState = ref<'idle' | 'sending' | 'sent'>('idle')

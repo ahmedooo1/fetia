@@ -72,7 +72,12 @@ async function onPhotoSelected(e: Event) {
       headers: auth.token ? { Authorization: `Bearer ${auth.token}` } : {},
     })
     form.photoUrl = res.url
-  } catch (err) {
+  } catch (err: any) {
+    if (err?.response?.status === 401) {
+      auth.logout()
+      router.push({ path: '/login', query: { expired: '1', redirect: route.fullPath } })
+      return
+    }
     errorMsg.value = "L'upload de la photo a échoué (jpg, png ou webp, 20 Mo max)."
   } finally {
     uploadingPhoto.value = false
