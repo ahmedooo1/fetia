@@ -34,6 +34,12 @@ const card = ref<CardData | null>(null)
 const loading = ref(true)
 const notFound = ref(false)
 
+// A "personal" link (?pour=toi) is the same card sent straight to the
+// person being celebrated instead of to guests - it hides the RSVP form
+// regardless of the card's own rsvpEnabled setting, since asking the
+// honoree to RSVP to their own gift doesn't make sense.
+const isPersonalView = computed(() => route.query.pour === 'toi')
+
 onMounted(async () => {
   try {
     card.value = await request<CardData>(`/cards/public/${route.params.slug}`)
@@ -105,7 +111,7 @@ useSeoMeta({
         :photo-url="card.data.photoUrl"
         :event-at="card.data.eventAt"
         :music-url="card.data.musicUrl"
-        :rsvp-slug="card.rsvpEnabled ? card.slug : ''"
+        :rsvp-slug="card.rsvpEnabled && !isPersonalView ? card.slug : ''"
       />
       <div class="fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 flex-col items-center gap-2">
         <p v-if="downloadError" class="rounded-full bg-coral/90 px-4 py-1.5 font-body text-xs font-semibold text-white shadow-lg">{{ downloadError }}</p>

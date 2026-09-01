@@ -17,6 +17,7 @@ const router = useRouter()
 const cards = ref<Card[]>([])
 const loading = ref(true)
 const copiedId = ref('')
+const copiedPersonalId = ref('')
 const deletingId = ref('')
 
 onMounted(async () => {
@@ -41,11 +42,23 @@ function cardUrl(slug: string) {
   return `${window.location.origin}/c/${slug}`
 }
 
+function personalCardUrl(slug: string) {
+  return `${cardUrl(slug)}?pour=toi`
+}
+
 function copyLink(c: Card) {
   navigator.clipboard?.writeText(cardUrl(c.slug))
   copiedId.value = c.id
   setTimeout(() => {
     if (copiedId.value === c.id) copiedId.value = ''
+  }, 1500)
+}
+
+function copyPersonalLink(c: Card) {
+  navigator.clipboard?.writeText(personalCardUrl(c.slug))
+  copiedPersonalId.value = c.id
+  setTimeout(() => {
+    if (copiedPersonalId.value === c.id) copiedPersonalId.value = ''
   }, 1500)
 }
 
@@ -123,7 +136,10 @@ async function removeCard(c: Card) {
 
         <div v-if="c.isUnlocked" class="mt-3 grid grid-cols-2 gap-2">
           <button class="focus-ring rounded-xl bg-white/5 px-3 py-2 font-body text-xs text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10" @click="copyLink(c)">
-            {{ copiedId === c.id ? 'Copié !' : 'Copier le lien' }}
+            {{ copiedId === c.id ? 'Copié !' : 'Lien invités' }}
+          </button>
+          <button class="focus-ring rounded-xl bg-white/5 px-3 py-2 font-body text-xs text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10" @click="copyPersonalLink(c)">
+            {{ copiedPersonalId === c.id ? 'Copié !' : 'Lien perso' }}
           </button>
           <button class="focus-ring rounded-xl bg-white/5 px-3 py-2 font-body text-xs text-cream/80 ring-1 ring-white/10 transition hover:bg-white/10" @click="shareWhatsApp(c)">
             WhatsApp
@@ -136,7 +152,7 @@ async function removeCard(c: Card) {
           </NuxtLink>
           <NuxtLink
             :to="`/cards/${c.id}/rsvps`"
-            class="focus-ring rounded-xl bg-gold/15 px-3 py-2 text-center font-body text-xs font-semibold text-gold ring-1 ring-gold/30 transition hover:bg-gold/25"
+            class="focus-ring col-span-2 rounded-xl bg-gold/15 px-3 py-2 text-center font-body text-xs font-semibold text-gold ring-1 ring-gold/30 transition hover:bg-gold/25"
           >
             Réponses RSVP
           </NuxtLink>
