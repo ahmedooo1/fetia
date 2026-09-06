@@ -17,14 +17,32 @@ export class UsersService {
     return this.usersRepo.findOne({ where: { id } });
   }
 
+  findByGoogleId(googleId: string) {
+    return this.usersRepo.findOne({ where: { googleId } });
+  }
+
   findByValidResetToken(tokenHash: string) {
     return this.usersRepo.findOne({
       where: { resetPasswordTokenHash: tokenHash, resetPasswordExpires: MoreThan(new Date()) },
     });
   }
 
-  async create(data: { email: string; passwordHash: string; name?: string }) {
+  async create(data: {
+    email: string;
+    passwordHash?: string;
+    name?: string;
+    googleId?: string;
+    emailVerified?: boolean;
+  }) {
     const user = this.usersRepo.create(data);
+    return this.usersRepo.save(user);
+  }
+
+  async linkGoogleId(id: string, googleId: string) {
+    const user = await this.findById(id);
+    if (!user) return null;
+    user.googleId = googleId;
+    user.emailVerified = true;
     return this.usersRepo.save(user);
   }
 

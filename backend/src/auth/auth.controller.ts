@@ -23,6 +23,12 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  @Throttle({ default: { limit: 8, ttl: 10 * 60 * 1000 } })
+  @Post('google')
+  googleLogin(@Body('idToken') idToken: string) {
+    return this.authService.googleLogin(idToken);
+  }
+
   @Throttle({ default: { limit: 5, ttl: 10 * 60 * 1000 } })
   @Post('forgot-password')
   forgotPassword(@Body() dto: ForgotPasswordDto) {

@@ -30,11 +30,13 @@ export default defineNuxtConfig({
         { name: 'twitter:image', content: 'https://fetia.aaweb.fr/og-image.png' },
       ],
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+      script: [{ src: 'https://accounts.google.com/gsi/client', async: true, defer: true }],
     },
   },
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3001/api',
+      googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID || '',
     },
   },
 })
