@@ -1,7 +1,7 @@
 interface CardHandle {
   $el: HTMLElement
   opened: boolean
-  open: () => void
+  open: (instant?: boolean) => Promise<void> | void
 }
 
 function slugifyFilename(name: string) {
@@ -36,7 +36,8 @@ export function useCardDownload(cardRef: Ref<CardHandle | null>) {
     const handle = cardRef.value
     if (!handle) throw new Error('Carte introuvable')
     if (!handle.opened) {
-      handle.open()
+      // enveloppe ouverte sans animation, puis le temps que le contenu apparaisse
+      await handle.open(true)
       await new Promise((r) => setTimeout(r, 950))
     }
     // attend que les polices custom (Cormorant, Great Vibes, etc.) soient

@@ -392,36 +392,15 @@ function sunburstLines(count: number) {
   return inner
 }
 const sunburstHero = computed(() => svgBackgroundUrl(sunburstLines(24), '0 0 200 200', t.value.accent))
-const sunburstCover = computed(() => svgBackgroundUrl(sunburstLines(20), '0 0 200 200', t.value.accent))
 
 const opened = ref(props.forceOpen)
 const opening = ref(false)
+const coverGone = ref(props.forceOpen)
+const envelopeRef = ref<{ play: (instant?: boolean) => Promise<void> } | null>(null)
 const confettiRef = ref<{ burst: () => void } | null>(null)
 
-const openStyle: Record<Accent, 'seal' | 'burst' | 'sunrise' | 'bloom' | 'part'> = {
-  sunset: 'sunrise',
-  candy: 'burst',
-  gold: 'seal',
-  sage: 'bloom',
-  sky: 'part',
-  neon: 'burst',
-  blush: 'seal',
-  terracotta: 'sunrise',
-  champagne: 'seal',
-  pearl: 'part',
-  navy: 'seal',
-  burgundy: 'seal',
-  ruby: 'bloom',
-  lavender: 'bloom',
-  noir: 'seal',
-  emerald: 'burst',
-  ocean: 'part',
-  mint: 'part',
-  rose: 'bloom',
-  forest: 'bloom',
-  midnight: 'burst',
-}
-const variant = computed(() => openStyle[props.accent] || 'seal')
+// themes de fete : confettis quand la carte sort de l'enveloppe
+const withConfetti = computed(() => ['candy', 'neon', 'emerald', 'midnight'].includes(props.accent))
 const hasMore = computed(() => Boolean(props.date || props.location || props.closing || props.timeline?.length || props.rsvpSlug))
 
 // ---- RSVP ----
@@ -473,10 +452,9 @@ const monogram = computed(() => {
   return '&'
 })
 
-function open() {
+async function open(instant = false) {
   if (opened.value || opening.value) return
   opening.value = true
-  if (variant.value === 'burst') confettiRef.value?.burst()
   // attempt to start music immediately (user gesture)
   if (props.musicUrl) {
     if (isYouTube.value) {
@@ -495,10 +473,19 @@ function open() {
       } catch {}
     }
   }
-  window.setTimeout(() => {
-    opened.value = true
-    opening.value = false
-  }, 750)
+  if (envelopeRef.value) {
+    await envelopeRef.value.play(instant)
+  } else {
+    onEnvelopeFilled()
+    coverGone.value = true
+  }
+}
+
+// la carte remplit le cadre : le contenu apparait sous l'enveloppe qui s'efface
+function onEnvelopeFilled() {
+  opened.value = true
+  opening.value = false
+  if (withConfetti.value) confettiRef.value?.burst()
 }
 
 // ---- PHOTO ----
@@ -731,7 +718,8 @@ watch(
     <!-- ============ HERO ============ -->
     <section
       class="relative flex flex-col items-center justify-center px-6 text-center"
-      :class="compact ? 'min-h-[540px] py-14' : 'min-h-[92vh] py-20'"
+      :class="compact ? 'min-h-[540px] py-14' : coverGone ? 'min-h-[92vh] py-20' : 'min-h-[100svh] py-20'"
+      style="transition: min-height 0.7s ease"
     >
       <OrnamentFrame v-if="opened" :color="t.accent" :style="frame" style="--frame-inset:2.5rem" />
         
@@ -834,123 +822,38 @@ watch(
         </div>
       </div>
 
-      <!-- ============ COVER (avant ouverture) ============ -->
-      <button
-        v-if="!opened"
-        type="button"
-        class="cover focus-ring absolute inset-0 z-20 flex flex-col items-center justify-center"
-        :class="opening ? `cover-${variant}-open` : ''"
-        :style="{ background: t.bg }"
-        :disabled="opening"
-        aria-label="Ouvrir la carte"
-        @click="open"
+      <!-- ============ ENVELOPPE (avant ouverture) ============ -->
+      <EnvelopeCover
+        v-if="!coverGone"
+        ref="envelopeRef"
+        :theme="t"
+        :monogram="monogram"
+        :compact="compact"
+        @seal="open()"
+        @filled="onEnvelopeFilled"
+        @done="coverGone = true"
       >
-        
-
-        <!-- enveloppe (plis) pour le theme gold -->
-        <svg v-if="variant === 'seal'" class="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <polygon points="0,0 100,0 50,46" :fill="t.accentSoft" fill-opacity="0.22" :stroke="t.accent" stroke-opacity="0.3" stroke-width="0.25" vector-effect="non-scaling-stroke" />
-          <polygon points="0,100 100,100 50,52" :fill="t.accentSoft" fill-opacity="0.16" :stroke="t.accent" stroke-opacity="0.25" stroke-width="0.25" vector-effect="non-scaling-stroke" />
-          <polygon points="0,0 0,100 50,49" :fill="t.accentSoft" fill-opacity="0.12" :stroke="t.accent" stroke-opacity="0.2" stroke-width="0.2" vector-effect="non-scaling-stroke" />
-          <polygon points="100,0 100,100 50,49" :fill="t.accentSoft" fill-opacity="0.12" :stroke="t.accent" stroke-opacity="0.2" stroke-width="0.2" vector-effect="non-scaling-stroke" />
-        </svg>
-
-        <!-- decor de la cover, selon le layout -->
-        <template v-if="layout === 'classic'">
-          <div class="pointer-events-none absolute inset-x-0 top-8 flex justify-center">
-            <OrnamentFlora :color="t.accent" :opacity="0.6" class="h-32 w-44" />
-          </div>
-          <div class="pointer-events-none absolute left-4 top-1/4 -rotate-[24deg]">
-            <OrnamentFlora :color="t.accent" :opacity="0.3" class="h-20 w-28" />
-          </div>
-          <div class="pointer-events-none absolute right-4 top-1/4 rotate-[24deg] -scale-x-100">
-            <OrnamentFlora :color="t.accent" :opacity="0.3" class="h-20 w-28" />
-          </div>
-          <div class="pointer-events-none absolute bottom-8 left-8 rotate-[12deg]">
-            <OrnamentFlora :color="t.accent" :opacity="0.35" class="h-24 w-32" />
-          </div>
-          <div class="pointer-events-none absolute bottom-8 right-8 -rotate-[12deg] -scale-x-100">
-            <OrnamentFlora :color="t.accent" :opacity="0.35" class="h-24 w-32" />
-          </div>
-        </template>
-        <div v-else-if="layout === 'poster'" class="pointer-events-none absolute inset-0 overflow-hidden opacity-[0.16]" :style="{ color: t.accent }">
-          <div class="absolute -left-1/4 top-0 h-[200%] w-16 -rotate-[18deg]" :style="{ background: 'currentColor' }" />
-          <div class="absolute right-0 top-0 h-[200%] w-16 -rotate-[18deg]" :style="{ background: 'currentColor' }" />
+        <div class="flex h-full flex-col items-center px-6 pt-[14%] text-center" :style="{ color: t.ink }">
+          <p
+            v-if="!eyebrowBadge"
+            class="text-[11px] font-semibold uppercase tracking-[0.35em]"
+            :style="{ color: t.accent }"
+          >
+            {{ t.eyebrow }}
+          </p>
+          <p
+            v-else
+            class="mx-auto w-fit rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.25em] shadow-sm"
+            :style="{ background: t.accent, color: t.dark ? t.bgSoft : '#FFFDF7' }"
+          >
+            {{ t.eyebrow }}
+          </p>
+          <OrnamentDivider :color="t.accent" :style="divider" class="mt-4" />
+          <p class="mt-6 max-w-xl break-words text-balance leading-[1.1]" :class="titleFontClass" :style="{ fontSize: titleSize }">
+            {{ title }}
+          </p>
         </div>
-        <template v-else-if="layout === 'pastel'">
-          <div class="pointer-events-none absolute left-6 top-10 h-24 w-24 rounded-full opacity-40 blur-2xl" :style="{ background: t.accentSoft }" />
-          <div class="pointer-events-none absolute bottom-10 right-6 h-24 w-24 rounded-full opacity-40 blur-2xl" :style="{ background: t.accent }" />
-        </template>
-        <div
-          v-else-if="layout === 'celebration'"
-          class="pointer-events-none absolute left-1/2 top-1/2 h-[120cqw] w-[120cqw] -translate-x-1/2 -translate-y-1/2 opacity-20"
-          :style="{ backgroundImage: sunburstCover, backgroundSize: '100% 100%' }"
-        />
-
-        <!-- halo lumineux qui pulse pour inviter au clic -->
-        <div
-          class="glow-pulse pointer-events-none absolute left-1/2 top-1/2 z-[5] h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full"
-          :style="{ background: `radial-gradient(circle, ${t.accent}80, transparent 70%)` }"
-        />
-        <div
-          class="glow-pulse glow-pulse-delay pointer-events-none absolute left-1/2 top-1/2 z-[5] h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full"
-          :style="{ background: `radial-gradient(circle, ${t.accent}80, transparent 70%)` }"
-        />
-
-        <!-- SEAL -->
-        <template v-if="variant === 'seal'">
-          <div class="seal relative z-10 flex h-24 w-24 items-center justify-center rounded-full" :style="{ background: `radial-gradient(circle at 35% 30%, ${t.accentSoft}, ${t.accent} 75%)` }">
-            <svg class="absolute inset-1 h-[calc(100%-8px)] w-[calc(100%-8px)]" viewBox="0 0 40 40" fill="none">
-              <circle cx="20" cy="20" r="18" stroke="#FFFDF7" stroke-opacity="0.6" stroke-width="0.8" stroke-dasharray="1.5 2" />
-            </svg>
-            <span class="font-serif-display text-2xl font-semibold tracking-wide text-[#FFFDF7]">{{ monogram }}</span>
-          </div>
-        </template>
-
-        <!-- BLOOM -->
-        <template v-else-if="variant === 'bloom'">
-          <div class="relative z-10 h-24 w-24">
-            <div v-for="i in 6" :key="i" class="petal absolute left-1/2 top-1/2" :style="{ transform: `translate(-50%, -50%) rotate(${i * 60}deg) translateY(-16px)`, background: `radial-gradient(circle at 40% 30%, ${t.accentSoft}, ${t.accent})` }" />
-            <div class="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full" :style="{ background: t.accent }" />
-          </div>
-        </template>
-
-        <!-- PART -->
-        <template v-else-if="variant === 'part'">
-          <div class="relative z-10 flex h-24 items-center justify-center">
-            <svg width="80" height="60" viewBox="0 0 80 60" fill="none" :style="{ color: t.accent }">
-              <path d="M20 44 a12 12 0 0 1 2-24 a16 16 0 0 1 30-4 a12 12 0 0 1 8 22 z" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.12" />
-              <path d="M52 14 l2 5 5 2 -5 2 -2 5 -2-5 -5-2 5-2 z" fill="currentColor" fill-opacity="0.55" />
-              <circle cx="66" cy="12" r="1.6" fill="currentColor" fill-opacity="0.5" />
-              <circle cx="12" cy="16" r="1.3" fill="currentColor" fill-opacity="0.5" />
-            </svg>
-          </div>
-        </template>
-
-        <!-- SUNRISE -->
-        <template v-else-if="variant === 'sunrise'">
-          <div class="sunrise-glow absolute inset-x-0 bottom-0 h-1/2" :style="{ background: `radial-gradient(ellipse at 50% 100%, ${t.accentSoft}AA, transparent 65%)` }" />
-          <svg class="relative z-10" width="72" height="72" viewBox="0 0 72 72" fill="none" :style="{ color: t.accent }">
-            <circle cx="36" cy="36" r="12" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.16" />
-            <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
-              <path d="M36 12v8M36 52v8M12 36h8M52 36h8M19 19l5.5 5.5M47.5 47.5L53 53M53 19l-5.5 5.5M24.5 47.5L19 53" />
-            </g>
-          </svg>
-        </template>
-
-        <!-- BURST -->
-        <template v-else>
-          <svg class="relative z-10" width="64" height="64" viewBox="0 0 64 64" fill="none" :style="{ color: t.accent }">
-            <path d="M32 8l5.9 14.2L52 28l-14.1 5.8L32 48l-5.9-14.2L12 28l14.1-5.8z" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.18" />
-            <circle cx="52" cy="12" r="2" fill="currentColor" fill-opacity="0.6" />
-            <circle cx="12" cy="50" r="1.6" fill="currentColor" fill-opacity="0.6" />
-          </svg>
-        </template>
-
-        <p class="absolute bottom-10 z-10 text-[10px] font-semibold uppercase tracking-[0.3em] opacity-60">
-          Touchez pour ouvrir
-        </p>
-      </button>
+      </EnvelopeCover>
 
       <!-- Autoplay blocked fallback: small CTA to let user enable audio -->
       <div v-if="autoplayBlocked" class="fixed bottom-24 right-6 z-50">
@@ -963,7 +866,7 @@ watch(
         </button>
       </div>
 
-      <ConfettiCanvas v-if="variant === 'burst'" ref="confettiRef" class="z-30" />
+      <ConfettiCanvas v-if="withConfetti" ref="confettiRef" class="z-30" />
 
       <!-- musique de fond -->
       <template v-if="musicUrl && opened">
@@ -1219,89 +1122,3 @@ watch(
     </template>
   </div>
 </template>
-
-<style scoped>
-.cover {
-  transition: opacity 0.6s ease 0.15s, transform 0.6s ease;
-}
-
-/* SEAL : le sceau grossit et fond, la cover s'estompe */
-.seal {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22), inset 0 1px 3px rgba(255, 255, 255, 0.4);
-  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.45s ease;
-}
-.cover-seal-open {
-  opacity: 0;
-}
-.cover-seal-open .seal {
-  transform: scale(1.5) rotate(14deg);
-  opacity: 0;
-}
-
-/* BLOOM : les petales s'ecartent */
-.petal {
-  width: 34px;
-  height: 46px;
-  border-radius: 50% 50% 50% 0;
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
-}
-.cover-bloom-open {
-  opacity: 0;
-}
-.cover-bloom-open .petal {
-  opacity: 0;
-}
-
-/* PART / SUNRISE / BURST : fondu global */
-.cover-part-open,
-.cover-sunrise-open,
-.cover-burst-open {
-  opacity: 0;
-}
-.cover-burst-open {
-  transform: scale(0.92);
-}
-
-.sunrise-glow {
-  transition: transform 0.7s ease, opacity 0.6s ease;
-}
-.cover-sunrise-open .sunrise-glow {
-  transform: scale(2.2);
-}
-
-/* halo lumineux qui pulse pour inviter au clic sur la carte fermee */
-.glow-pulse {
-  animation: pulseGlow 2.2s ease-out infinite;
-}
-.glow-pulse-delay {
-  animation-delay: 1.1s;
-}
-@keyframes pulseGlow {
-  0% {
-    transform: translate(-50%, -50%) scale(0.75);
-    opacity: 0.6;
-  }
-  70% {
-    transform: translate(-50%, -50%) scale(1.9);
-    opacity: 0;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.9);
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cover,
-  .seal,
-  .petal,
-  .sunrise-glow {
-    transition-duration: 0.05s;
-  }
-  .glow-pulse {
-    animation: none;
-    opacity: 0.35;
-    transform: translate(-50%, -50%) scale(1.1);
-  }
-}
-</style>
